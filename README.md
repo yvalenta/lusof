@@ -2,8 +2,13 @@
 
 SPA promocional de **Lusof Sweet** («Chocolates hechos con amor», pedidos por WhatsApp
 al 300 750 3552). Muestra los antojos y las cajas de regalo, deja armar un pedido y lo
-manda armado a WhatsApp. **Sin publicar**: vive solo en esta Mac, en un repo git local
-sin remoto. Publicarla (Pages, Netlify, etc.) es decisión de Yonatan.
+manda armado a WhatsApp.
+
+**Publicada** desde el 2026-09-26 (GO de Yonatan): repo público
+[`yvalenta/lusof`](https://github.com/yvalenta/lusof), GitHub Pages desde `main` (raíz),
+dominio <https://lusof.ynt.codes> por el archivo `CNAME` y un registro CNAME
+`lusof → yvalenta.github.io` en Cloudflare **sin proxy** (nube gris), igual que
+resplandor. **Cada push a `main` sale al aire**: probar en local antes de empujar.
 
 ## Correrla
 
