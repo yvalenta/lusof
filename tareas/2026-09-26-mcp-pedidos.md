@@ -1,5 +1,5 @@
 ---
-estado: propuesta
+estado: en-curso
 dueño: sesión
 fecha: 2026-09-26
 tema: que los agentes encuentren a Lusof Sweet y armen pedidos (MCP y descubrimiento por agentes)
@@ -49,3 +49,5 @@ declara acá y arranca en sesión nueva (`/casa tareas/2026-09-26-mcp-pedidos.md
 - 2026-09-26: declarada, sin desarrollar (sesión de la web en 209k, regla de corte).
   Pendiente además de la otra tarea: el CNAME `lusof` en Cloudflare (la pestaña quedó en
   el login; Yonatan inicia sesión).
+- 2026-09-26: Yonatan decide **A** (la persona envía), alcance **1, 2 y Worker propio**
+  (`mcp.lusof.ynt.codes`), y **empujar a `main` si pasa la prueba en local**. En curso.
