@@ -262,10 +262,12 @@
     </div>
   </header>
 
-  <!-- El chocolate que escurre de la barra: el único movimiento que no se pide -->
+  <!-- El chocolate que escurre de la barra: el único movimiento que no se pide.
+       El tramo de 1440 va tres veces (viewBox -1440..2880): así «slice» recorta a lo ancho y
+       nunca a lo alto, y las gotas terminan redondas hasta ~3970 px. Una gota nueva va en los tres. -->
   <div class="vt-goteo relative z-30 -mt-px" aria-hidden="true">
-    <svg class="goteo" viewBox="0 0 1440 150" preserveAspectRatio="xMidYMin slice" fill="currentColor" focusable="false">
-      <path d="M0 0H1440V34Q1410 40 1380 34Q1325 40 1270 34Q1210 40 1150 34Q1080 40 1010 34Q945 40 880 34Q805 40 730 34Q665 40 600 34Q535 40 470 34Q400 40 330 34Q270 40 210 34Q140 40 70 34Q35 40 0 34Z" />
+    <svg class="goteo" viewBox="-1440 0 4320 150" preserveAspectRatio="xMidYMin slice" fill="currentColor" focusable="false">
+      <path d="M-1440 0H2880V34Q2850 40 2820 34Q2765 40 2710 34Q2650 40 2590 34Q2520 40 2450 34Q2385 40 2320 34Q2245 40 2170 34Q2105 40 2040 34Q1975 40 1910 34Q1840 40 1770 34Q1710 40 1650 34Q1580 40 1510 34Q1475 40 1440 34Q1410 40 1380 34Q1325 40 1270 34Q1210 40 1150 34Q1080 40 1010 34Q945 40 880 34Q805 40 730 34Q665 40 600 34Q535 40 470 34Q400 40 330 34Q270 40 210 34Q140 40 70 34Q35 40 0 34Q-30 40 -60 34Q-115 40 -170 34Q-230 40 -290 34Q-360 40 -430 34Q-495 40 -560 34Q-635 40 -710 34Q-775 40 -840 34Q-905 40 -970 34Q-1040 40 -1110 34Q-1170 40 -1230 34Q-1300 40 -1370 34Q-1405 40 -1440 34Z" />
       <g class="gota" style="--i:0"><path d="M43 30H97C87 32 85 40 84 48L82 82C82 99 58 99 58 82L56 48C55 40 53 32 43 30Z" /><rect class="brillo" x="61" y="50" width="5" height="26" rx="2.5" /></g>
       <g class="gota" style="--i:3"><path d="M186 30H234C224 32 222 40 221 48L219 54C219 71 201 71 201 54L199 48C198 40 196 32 186 30Z" /></g>
       <g class="gota" style="--i:1"><path d="M303 30H357C347 32 345 40 344 48L342 116C342 133 318 133 318 116L316 48C315 40 313 32 303 30Z" /><rect class="brillo" x="321" y="52" width="5" height="52" rx="2.5" /></g>
@@ -277,6 +279,32 @@
       <g class="gota" style="--i:4"><path d="M1123 30H1177C1167 32 1165 40 1164 48L1162 74C1162 91 1138 91 1138 74L1136 48C1135 40 1133 32 1123 30Z" /></g>
       <g class="gota" style="--i:7"><path d="M1246 30H1294C1284 32 1282 40 1281 48L1279 52C1279 69 1261 69 1261 52L1259 48C1258 40 1256 32 1246 30Z" /></g>
       <g class="gota" style="--i:2"><path d="M1353 30H1407C1397 32 1395 40 1394 48L1392 94C1392 111 1368 111 1368 94L1366 48C1365 40 1363 32 1353 30Z" /><rect class="brillo" x="1371" y="52" width="5" height="34" rx="2.5" /></g>
+      <g transform="translate(-1440)">
+        <g class="gota" style="--i:4"><path d="M43 30H97C87 32 85 40 84 48L82 82C82 99 58 99 58 82L56 48C55 40 53 32 43 30Z" /><rect class="brillo" x="61" y="50" width="5" height="26" rx="2.5" /></g>
+        <g class="gota" style="--i:7"><path d="M186 30H234C224 32 222 40 221 48L219 54C219 71 201 71 201 54L199 48C198 40 196 32 186 30Z" /></g>
+        <g class="gota" style="--i:5"><path d="M303 30H357C347 32 345 40 344 48L342 116C342 133 318 133 318 116L316 48C315 40 313 32 303 30Z" /><rect class="brillo" x="321" y="52" width="5" height="52" rx="2.5" /></g>
+        <g class="gota" style="--i:0"><path d="M443 30H497C487 32 485 40 484 48L482 68C482 85 458 85 458 68L456 48C455 40 453 32 443 30Z" /></g>
+        <g class="gota" style="--i:3"><path d="M576 30H624C614 32 612 40 611 48L609 48C609 65 591 65 591 48L589 48C588 40 586 32 576 30Z" /></g>
+        <g class="gota" style="--i:6"><path d="M703 30H757C747 32 745 40 744 48L742 100C742 117 718 117 718 100L716 48C715 40 713 32 703 30Z" /><rect class="brillo" x="721" y="52" width="5" height="40" rx="2.5" /></g>
+        <g class="gota" style="--i:1"><path d="M856 30H904C894 32 892 40 891 48L889 64C889 81 871 81 871 64L869 48C868 40 866 32 856 30Z" /></g>
+        <g class="gota" style="--i:4"><path d="M983 30H1037C1027 32 1025 40 1024 48L1022 128C1022 145 998 145 998 128L996 48C995 40 993 32 983 30Z" /><rect class="brillo" x="1001" y="52" width="5" height="64" rx="2.5" /></g>
+        <g class="gota" style="--i:8"><path d="M1123 30H1177C1167 32 1165 40 1164 48L1162 74C1162 91 1138 91 1138 74L1136 48C1135 40 1133 32 1123 30Z" /></g>
+        <g class="gota" style="--i:2"><path d="M1246 30H1294C1284 32 1282 40 1281 48L1279 52C1279 69 1261 69 1261 52L1259 48C1258 40 1256 32 1246 30Z" /></g>
+        <g class="gota" style="--i:6"><path d="M1353 30H1407C1397 32 1395 40 1394 48L1392 94C1392 111 1368 111 1368 94L1366 48C1365 40 1363 32 1353 30Z" /><rect class="brillo" x="1371" y="52" width="5" height="34" rx="2.5" /></g>
+      </g>
+      <g transform="translate(1440)">
+        <g class="gota" style="--i:6"><path d="M43 30H97C87 32 85 40 84 48L82 82C82 99 58 99 58 82L56 48C55 40 53 32 43 30Z" /><rect class="brillo" x="61" y="50" width="5" height="26" rx="2.5" /></g>
+        <g class="gota" style="--i:0"><path d="M186 30H234C224 32 222 40 221 48L219 54C219 71 201 71 201 54L199 48C198 40 196 32 186 30Z" /></g>
+        <g class="gota" style="--i:7"><path d="M303 30H357C347 32 345 40 344 48L342 116C342 133 318 133 318 116L316 48C315 40 313 32 303 30Z" /><rect class="brillo" x="321" y="52" width="5" height="52" rx="2.5" /></g>
+        <g class="gota" style="--i:2"><path d="M443 30H497C487 32 485 40 484 48L482 68C482 85 458 85 458 68L456 48C455 40 453 32 443 30Z" /></g>
+        <g class="gota" style="--i:5"><path d="M576 30H624C614 32 612 40 611 48L609 48C609 65 591 65 591 48L589 48C588 40 586 32 576 30Z" /></g>
+        <g class="gota" style="--i:8"><path d="M703 30H757C747 32 745 40 744 48L742 100C742 117 718 117 718 100L716 48C715 40 713 32 703 30Z" /><rect class="brillo" x="721" y="52" width="5" height="40" rx="2.5" /></g>
+        <g class="gota" style="--i:3"><path d="M856 30H904C894 32 892 40 891 48L889 64C889 81 871 81 871 64L869 48C868 40 866 32 856 30Z" /></g>
+        <g class="gota" style="--i:6"><path d="M983 30H1037C1027 32 1025 40 1024 48L1022 128C1022 145 998 145 998 128L996 48C995 40 993 32 983 30Z" /><rect class="brillo" x="1001" y="52" width="5" height="64" rx="2.5" /></g>
+        <g class="gota" style="--i:1"><path d="M1123 30H1177C1167 32 1165 40 1164 48L1162 74C1162 91 1138 91 1138 74L1136 48C1135 40 1133 32 1123 30Z" /></g>
+        <g class="gota" style="--i:4"><path d="M1246 30H1294C1284 32 1282 40 1281 48L1279 52C1279 69 1261 69 1261 52L1259 48C1258 40 1256 32 1246 30Z" /></g>
+        <g class="gota" style="--i:8"><path d="M1353 30H1407C1397 32 1395 40 1394 48L1392 94C1392 111 1368 111 1368 94L1366 48C1365 40 1363 32 1353 30Z" /><rect class="brillo" x="1371" y="52" width="5" height="34" rx="2.5" /></g>
+      </g>
     </svg>
   </div>
 

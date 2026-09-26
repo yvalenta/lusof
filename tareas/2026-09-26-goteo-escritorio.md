@@ -1,5 +1,5 @@
 ---
-estado: propuesta
+estado: en-curso
 dueño: sesión
 fecha: 2026-09-26
 tema: el goteo de chocolate sale cortado plano en escritorio ancho (≳1500 px)
@@ -32,3 +32,14 @@ Probar con el harness de celular/escritorio (playwright-core) a 360, 390, 414, 1
 ## Bitácora
 
 - 2026-09-26: declarada, sin desarrollar (la sesión que la vio iba en 270k; regla de corte).
+- 2026-09-26: en curso. Arreglo = opción 3 (repetir en vez de estirar), sin tocar el CSS ni el
+  alto: el `viewBox` del goteo pasa a `-1440 0 4320 150`, con el tramo de 1440 tres veces (las
+  copias con `--i` corrido, para que las gemelas no caigan a la vez). Con `slice` la escala queda
+  en `alto/150` hasta ~3974 px, así que recorta a lo ancho. Medido con playwright-core
+  (Chromium headless), HEAD contra el árbol, en `#/`, `#/antojos` y `#/p/torre-eiffel`: gotas
+  cortadas abajo a 768/1280/1440/1920/2735/3840 px, antes 1/1/1/4/8/11 → ahora 0 en todos
+  (holgura ≥ 4,5 px); ninguna gota pisa texto ni controles, ni antes ni ahora; la franja del
+  goteo a 360/390/414 sale idéntica píxel a píxel (0 px distintos). De paso: antes de ~1494 px
+  la gota más larga ya salía recortada 2–4 px (768–1440). `css.mjs --comprobar`,
+  `catalogo.mjs --comprobar` y 61/61 pruebas en verde. Falta el visto de Yonatan y su GO para
+  empujar (empujar publica).

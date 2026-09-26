@@ -117,6 +117,10 @@ docs/                             investigación de base (Resplandor, transition
   none` en el contenedor**, no solo en el dibujo de adentro: por el margen negativo que
   hace que las gotas «cuelguen» sobre el contenido, la caja del `<div>` mide el alto
   completo del SVG y, sin eso, tapaba el toque de lo que sigue (el bug de «← Antojos»).
+- **El goteo repite su tramo de 1440 a cada lado** (`viewBox="-1440 0 4320 150"` con
+  `slice`): recorta a lo ancho y nunca a lo alto, así las gotas terminan redondas hasta
+  ~3970 px sin mover el contenido. Una gota nueva va en los tres tramos; en celular solo se
+  ve el del centro.
 - **Rutas**: `#/`, `#/antojos`, `#/regalos`, `#/como-pedir`, `#/p/<id>`. Cada cambio pasa
   por `document.startViewTransition` y espera `Alpine.nextTick()` antes de la foto nueva;
   el mosaico del producto viaja entre lista y detalle (`view-transition-name: producto`).
