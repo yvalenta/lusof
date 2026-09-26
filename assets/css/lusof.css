@@ -1,0 +1,474 @@
+/* Lusof Sweet — estilos propios.
+   Tailwind (CDN) pone el layout con utilidades en el HTML; acá vive lo que es de la
+   marca: el goteo, los mosaicos, el cajón del pedido y el movimiento.
+   Colores muestreados del logo (assets/img/lusof-original.jpeg).
+   Movimiento con los tokens de transitions.dev: todo se apaga con «reducir movimiento». */
+
+:root {
+  --crema: #fbf1ec;       /* fondo: un rubor más claro que el del sello */
+  --nata: #fffaf7;        /* superficies */
+  --arena: #fae6db;       /* el crema exacto del sello */
+  --rubor: #f6d3cb;
+  --durazno: #f1b599;     /* el aro del sello */
+  --cacao: #3f1206;       /* texto y chocolate */
+  --cacao-2: #6b2a12;
+  --cacao-3: #8a5a48;     /* texto secundario: 5.2:1 sobre crema */
+  --coral: #e0645f;       /* «Sweet» */
+  --coral-tinta: #b4463f; /* coral apto para texto: 4.9:1 sobre crema */
+  --oro: #d59c42;         /* el filete dorado del sello */
+  --linea: rgb(63 18 6 / .12);
+
+  --r-panel: 1.75rem;
+  --r-mosaico: 1.375rem;
+
+  /* tokens de transitions.dev */
+  --salida: cubic-bezier(.22, 1, .36, 1);       /* ease-smooth-out */
+  --rebote: cubic-bezier(.34, 1.36, .64, 1);    /* ease-bounce */
+  --entrada-salida: cubic-bezier(.65, 0, .35, 1);
+  --d-rapida: 150ms;
+  --d-corta: 250ms;
+  --d-media: 350ms;
+  --d-lenta: 400ms;
+  --d-muy-lenta: 500ms;
+
+  color-scheme: light;
+}
+
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5.5rem; }
+body {
+  background: var(--crema);
+  color: var(--cacao);
+  font-family: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+html.cargando body { opacity: 0; }
+body { transition: opacity var(--d-corta) linear; }
+[x-cloak] { display: none !important; }
+[data-titulo]:focus, main:focus { outline: none; }
+
+.font-display { font-family: 'Gluten', 'Figtree', ui-rounded, system-ui, sans-serif; }
+.precio { font-variant-numeric: tabular-nums; font-weight: 750; letter-spacing: -.01em; }
+
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 3px;
+  border-radius: .7rem;
+}
+
+.saltar {
+  position: fixed; left: 1rem; top: .75rem; z-index: 100;
+  padding: .7rem 1.1rem; border-radius: 999px;
+  background: var(--nata); color: var(--cacao); font-weight: 700;
+  translate: 0 -200%;
+}
+.saltar:focus { translate: 0 0; }
+
+/* ───────── Barra superior ───────── */
+.marca img { filter: drop-shadow(0 4px 8px rgb(0 0 0 / .35)); }
+.nav-enlace {
+  position: relative; padding: .5rem .1rem; font-weight: 650;
+  color: rgb(255 250 247 / .74);
+  transition: color var(--d-rapida);
+}
+.nav-enlace:hover, .nav-enlace[aria-current='page'] { color: var(--nata); }
+.nav-enlace::after { /* una gota bajo la palabra activa */
+  content: ''; position: absolute; left: 50%; bottom: -.05rem;
+  width: .42rem; height: .42rem; border-radius: 50% 0 50% 50%; rotate: -45deg;
+  background: var(--durazno); translate: -50% 0; scale: 0;
+  transition: scale var(--d-muy-lenta) var(--rebote);
+}
+.nav-enlace[aria-current='page']::after { scale: 1; }
+
+.boton-pedido {
+  position: relative; display: inline-flex; align-items: center; gap: .5rem;
+  min-height: 2.75rem; padding: .55rem 1rem .55rem .85rem; border-radius: 999px;
+  background: rgb(255 250 247 / .1); color: var(--nata); font-weight: 700;
+  box-shadow: inset 0 0 0 1.5px rgb(255 250 247 / .22);
+  transition: background-color var(--d-rapida), transform var(--d-rapida) var(--salida);
+}
+.boton-pedido:hover { background: rgb(255 250 247 / .18); }
+.boton-pedido:active { transform: scale(.96); }
+.boton-pedido svg { width: 1.3rem; height: 1.3rem; }
+.contador {
+  position: absolute; top: -.4rem; right: -.4rem;
+  min-width: 1.4rem; height: 1.4rem; padding: 0 .32rem; border-radius: 999px;
+  display: grid; place-items: center;
+  background: var(--coral); color: var(--cacao); font-size: .78rem; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2.5px var(--cacao);
+  animation: insignia var(--d-muy-lenta) var(--rebote) both;
+}
+@keyframes insignia { from { scale: 0; opacity: 0; filter: blur(2px); } }
+
+/* ───────── Goteo de chocolate (el único movimiento que no se pide) ───────── */
+.goteo {
+  display: block; width: 100%;
+  height: clamp(64px, 9.5vw, 138px);
+  margin-bottom: clamp(-36px, -3.5vw, -18px); /* las gotas cuelgan sobre el contenido */
+  color: var(--cacao); pointer-events: none;
+}
+.goteo .gota { transform-box: fill-box; transform-origin: 50% 0; }
+html.primera:not(.cargando) .goteo .gota {
+  animation: gotear 1.5s var(--salida) both;
+  animation-delay: calc(120ms + var(--i, 0) * 70ms);
+}
+html.primera.cargando .goteo .gota { transform: scaleY(0); }
+.goteo .brillo { fill: #fff; opacity: .16; }
+@keyframes gotear {
+  0% { transform: scaleY(0); }
+  72% { transform: scaleY(1.05); }
+  100% { transform: scaleY(1); }
+}
+
+/* ───────── Heroe ───────── */
+.heroe { position: relative; padding-top: clamp(2.5rem, 6vw, 5rem); }
+.titular .linea { display: block; }
+/* «texts reveal» de transitions.dev: sube 12px y se desenfoca, líneas en cascada */
+html.primera .heroe .linea { opacity: 0; transform: translateY(12px); filter: blur(3px); }
+html.primera:not(.cargando) .heroe .linea {
+  animation: asomar var(--d-muy-lenta) var(--salida) forwards;
+  animation-delay: calc(650ms + var(--i, 0) * 90ms);
+}
+@keyframes asomar { to { opacity: 1; transform: none; filter: blur(0); } }
+
+.sello {
+  position: relative; width: 100%; height: auto;
+  filter: drop-shadow(0 28px 36px rgb(63 18 6 / .28));
+}
+.sello-anillo { /* el círculo punteado del flyer */
+  position: absolute; inset: -5%; border-radius: 50%;
+  border: 2px dashed rgb(224 100 95 / .45);
+  pointer-events: none;
+}
+.pegatina {
+  position: absolute; left: -7%; top: 9%;
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .6rem 1rem; border-radius: 999px;
+  background: var(--nata); color: var(--cacao); font-weight: 700;
+  box-shadow: 0 0 0 1.5px var(--linea), 0 14px 28px -14px rgb(63 18 6 / .55);
+  rotate: -5deg;
+  transition: rotate var(--d-media) var(--rebote), translate var(--d-media) var(--salida);
+}
+.pegatina .precio { color: var(--coral-tinta); }
+.pegatina:hover { rotate: -2deg; translate: 0 -2px; }
+
+/* ───────── Botones y enlaces ───────── */
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  min-height: 3.1rem; padding: .8rem 1.35rem; border-radius: 999px;
+  font-weight: 700; font-size: 1rem; line-height: 1.15;
+  transition: transform var(--d-rapida) var(--salida), background-color var(--d-rapida), box-shadow var(--d-rapida), color var(--d-rapida);
+  -webkit-tap-highlight-color: transparent;
+}
+.boton:active { transform: scale(.97); }
+.boton svg { width: 1.2em; height: 1.2em; flex: none; }
+.boton-cacao { background: var(--cacao); color: var(--nata); box-shadow: 0 12px 26px -16px rgb(63 18 6 / .95); }
+.boton-cacao:hover { background: var(--cacao-2); }
+.boton-claro { background: var(--nata); color: var(--cacao); box-shadow: inset 0 0 0 1.5px var(--linea); }
+.boton-claro:hover { box-shadow: inset 0 0 0 1.5px rgb(63 18 6 / .35); }
+.boton-nata { background: var(--nata); color: var(--cacao); }
+.boton-nata:hover { background: var(--arena); }
+.boton-borde { color: var(--nata); box-shadow: inset 0 0 0 1.5px rgb(255 250 247 / .3); }
+.boton-borde:hover { box-shadow: inset 0 0 0 1.5px rgb(255 250 247 / .7); }
+.boton[aria-disabled='true'] { opacity: .45; pointer-events: none; }
+
+.boton .cambio { display: inline-flex; align-items: center; gap: .55rem; }
+.boton.hecho { background: var(--cacao-2); }
+.check { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.check path { stroke-dasharray: 22; stroke-dashoffset: 22; animation: trazar var(--d-muy-lenta) var(--salida) 80ms forwards; }
+@keyframes trazar { to { stroke-dashoffset: 0; } }
+
+.boton-icono {
+  display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px;
+  transition: transform var(--d-rapida) var(--salida), background-color var(--d-rapida);
+}
+.boton-icono:active { transform: scale(.92); }
+.boton-icono svg { width: 1.3rem; height: 1.3rem; }
+
+.enlace {
+  font-weight: 700; color: var(--coral-tinta);
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .22em;
+  text-decoration-color: rgb(180 70 63 / .3);
+  transition: text-decoration-color var(--d-rapida);
+}
+.enlace:hover { text-decoration-color: currentColor; }
+
+.chip {
+  display: inline-block; padding: .3rem .8rem; border-radius: 999px;
+  background: var(--rubor); color: var(--coral-tinta); font-size: .9rem; font-weight: 700;
+}
+
+.estirado::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+
+/* ───────── Superficies ───────── */
+.panel { background: var(--nata); border-radius: var(--r-panel); box-shadow: 0 0 0 1px var(--linea); }
+
+.resumen {
+  position: sticky; top: 6rem; padding: 1.4rem;
+  background: var(--nata); border-radius: var(--r-panel); box-shadow: 0 0 0 1px var(--linea);
+}
+
+.aviso-regalo {
+  display: flex; align-items: center; gap: 1rem; max-width: 48rem;
+  padding: 1.1rem 1.25rem; border-radius: var(--r-panel);
+  background: var(--rubor);
+  transition: background-color var(--d-rapida);
+}
+.aviso-regalo:hover { background: #f3c6bc; }
+.aviso-regalo svg { width: 1.4rem; height: 1.4rem; }
+
+.como-pedir {
+  background:
+    radial-gradient(circle at 1px 1px, rgb(224 100 95 / .2) 1.2px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--arena);
+}
+.gota-numero { /* una gota de chocolate con el número del paso */
+  display: grid; place-items: center; width: 3.4rem; height: 3.4rem;
+  border-radius: 50% 0 50% 50%; rotate: -45deg;
+  background: var(--cacao); color: var(--nata);
+  box-shadow: inset -4px -6px 0 rgb(255 255 255 / .07);
+}
+.gota-numero span { rotate: 45deg; font-family: 'Gluten', system-ui, sans-serif; font-weight: 800; font-size: 1.6rem; line-height: 1; translate: 0 .08em; }
+
+/* ───────── Mosaico de producto: la ilustración sobre su color, o la foto cuando exista ───────── */
+.mosaico {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  border-radius: var(--r-mosaico);
+  background: var(--tono, var(--arena));
+  isolation: isolate;
+}
+.mosaico::before { /* brillo de chocolate templado */
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(120% 90% at 28% 12%, rgb(255 255 255 / .5), transparent 58%);
+}
+.mosaico .ilustracion {
+  position: relative; width: var(--ilus, 80%); height: auto; aspect-ratio: 1;
+  user-select: none; -webkit-user-drag: none;
+}
+/* «skeleton reveal»: la foto entra con fundido y desenfoque cuando termina de cargar */
+.mosaico .foto {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; filter: blur(2px);
+  transition: opacity var(--d-lenta) var(--entrada-salida), filter var(--d-lenta) var(--entrada-salida);
+}
+.mosaico .foto.cargada { opacity: 1; filter: none; }
+.mosaico:has(.foto:not(.cargada)) { animation: pulso 1s ease-in-out infinite; }
+@keyframes pulso { 50% { opacity: .6; } }
+
+.tono-crema { --tono: #f5dccd; }
+.tono-rubor { --tono: #f6cfc6; }
+.tono-coral { --tono: #f2aa9e; }
+.tono-oro   { --tono: #f3dcb2; }
+
+.etiqueta-cat {
+  position: absolute; left: .7rem; top: .7rem; padding: .2rem .65rem; border-radius: 999px;
+  background: rgb(255 250 247 / .85); color: var(--coral-tinta); font-size: .8rem; font-weight: 750;
+}
+
+/* Inclinación 3D con reflejo («card tilt» de transitions.dev). El artículo es el marco
+   plano que lee el puntero; solo .inclinable gira. */
+.marco-inclinable { perspective: 1000px; border-radius: var(--r-mosaico); }
+.inclinable {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 1000ms var(--salida);
+  will-change: transform;
+}
+.inclinable.inclinando { transition-duration: var(--d-lenta); }
+.inclinable .reflejo {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(255 244 230 / .6), transparent 48%);
+  mix-blend-mode: screen; opacity: 0;
+  transition: opacity 300ms var(--salida);
+}
+.inclinable.inclinando .reflejo { opacity: .9; }
+
+.tarjeta .agregar { box-shadow: 0 0 0 4px var(--crema); }
+.regalo { transition: box-shadow var(--d-rapida); }
+
+/* Filas del menú (como el flyer): cuadrito con el dibujo, nombre y precio, botón */
+.fila {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .9rem;
+  padding: .75rem .75rem .75rem .7rem; border-radius: 1.2rem;
+  transition: background-color var(--d-rapida);
+}
+.fila + .fila::before {
+  content: ''; position: absolute; top: 0; left: 5.1rem; right: .9rem;
+  border-top: 1px solid var(--linea);
+}
+.fila:hover { background: rgb(250 230 219 / .55); }
+.fila .mosaico { width: 3.75rem; height: 3.75rem; border-radius: 1rem; --ilus: 92%; }
+.linea-pedido .mosaico { width: 3.1rem; height: 3.1rem; border-radius: .85rem; --ilus: 92%; }
+.linea-pedido { gap: .75rem; padding: .7rem .55rem; }
+.linea-pedido + .linea-pedido::before { left: 4.3rem; }
+
+/* Botón «agregar» redondo */
+.agregar {
+  display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px;
+  background: var(--cacao); color: var(--nata);
+  transition: transform var(--d-rapida) var(--salida), background-color var(--d-rapida);
+}
+.agregar:hover { background: var(--cacao-2); }
+.agregar:active { transform: scale(.9); }
+.agregar svg { width: 1.2rem; height: 1.2rem; }
+
+/* Selector de cantidad */
+.cantidad {
+  display: inline-flex; align-items: center; gap: .1rem; padding: .2rem;
+  border-radius: 999px; background: var(--nata); box-shadow: inset 0 0 0 1.5px var(--linea);
+}
+.cantidad button {
+  display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; color: var(--cacao);
+  transition: background-color var(--d-rapida), transform var(--d-rapida) var(--salida);
+}
+.cantidad button:hover:not(:disabled) { background: var(--arena); }
+.cantidad button:active:not(:disabled) { transform: scale(.9); }
+.cantidad button:disabled { opacity: .35; }
+.cantidad button svg { width: 1rem; height: 1rem; }
+.cantidad output { display: inline-block; min-width: 1.6rem; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* ───────── Caja de corazón con letras ───────── */
+.corazon { position: absolute; inset: 0; display: grid; place-items: center; }
+.corazon-forma { position: absolute; width: 84%; height: 84%; top: 9%; filter: drop-shadow(0 22px 26px rgb(120 30 25 / .35)); }
+.letras {
+  position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: .35rem .3rem;
+  width: 58%; min-height: 3.4rem; margin-top: -6%;
+}
+.letras.ejemplo { opacity: .55; }
+.letra {
+  display: grid; place-items: center; width: clamp(2rem, 6.5vw, 2.9rem); height: clamp(2.5rem, 8vw, 3.5rem);
+  border-radius: .5rem;
+  background: linear-gradient(165deg, #fffdf8 0%, #f4e4cc 100%);
+  color: #fffdf8;
+  font-family: 'Gluten', system-ui, sans-serif; font-weight: 800; font-size: clamp(1.5rem, 4.6vw, 2.2rem); line-height: 1;
+  text-shadow: 0 1px 0 #d8bf9e, 0 2px 0 #c9a882, 0 3px 5px rgb(63 18 6 / .35);
+  box-shadow: inset 0 -3px 0 rgb(63 18 6 / .08), 0 7px 12px -7px rgb(63 18 6 / .7);
+  animation: letra-cae var(--d-muy-lenta) var(--rebote) both;
+}
+.letra.espacio { width: .55rem; background: none; box-shadow: none; }
+@keyframes letra-cae { from { transform: translateY(-45%) scale(.6); opacity: 0; filter: blur(2px); } }
+
+/* ───────── Pie: la franja café del flyer ───────── */
+.pie { border-radius: 2.5rem 2.5rem 0 0; margin-top: 2rem; }
+.numero { transition: color var(--d-rapida); }
+.numero:hover { color: var(--nata); }
+.qr {
+  padding: 1rem 1rem .8rem; border-radius: 1.5rem; background: var(--nata); color: var(--cacao);
+  text-align: center; rotate: 2deg;
+}
+.qr img { width: 11rem; height: 11rem; image-rendering: pixelated; }
+.qr figcaption { margin-top: .5rem; font-size: .85rem; font-weight: 650; max-width: 11rem; }
+
+/* ───────── Barra de pedido (móvil) ───────── */
+.barra-pedido {
+  position: fixed; left: .75rem; right: .75rem; z-index: 45;
+  bottom: calc(.75rem + env(safe-area-inset-bottom));
+}
+.barra-pedido svg { flex: none; }
+.barra-entra { transition: transform var(--d-lenta) var(--salida), opacity var(--d-corta); }
+.barra-sale { transition: transform var(--d-media) var(--salida), opacity var(--d-rapida); }
+.barra-fuera { transform: translateY(130%); opacity: 0; }
+.barra-dentro { transform: none; opacity: 1; }
+
+/* ───────── Cajón del pedido («panel reveal»: 400ms abrir, 350ms cerrar) ───────── */
+.cajon-fondo { position: fixed; inset: 0; z-index: 60; background: rgb(63 18 6 / .4); backdrop-filter: blur(3px); }
+.cajon {
+  position: fixed; z-index: 61; display: flex; flex-direction: column;
+  background: var(--crema);
+  box-shadow: 0 -24px 60px -24px rgb(63 18 6 / .5);
+  inset: auto 0 0 0; max-height: min(92dvh, 56rem);
+  border-radius: 1.75rem 1.75rem 0 0;
+}
+@media (min-width: 768px) {
+  .cajon { inset: .75rem .75rem .75rem auto; width: min(31rem, calc(100vw - 1.5rem)); max-height: none; border-radius: 1.75rem; }
+}
+.cajon-agarre { width: 2.75rem; height: .3rem; border-radius: 999px; background: rgb(63 18 6 / .2); margin: .6rem auto 0; }
+@media (min-width: 768px) { .cajon-agarre { display: none; } }
+
+.cajon-entra { transition: transform var(--d-lenta) var(--salida), opacity var(--d-lenta) var(--salida); }
+.cajon-sale { transition: transform var(--d-media) var(--salida), opacity var(--d-media) var(--salida); }
+.cajon-fuera { transform: translateY(100%); }
+@media (min-width: 768px) { .cajon-fuera { transform: translateX(calc(100% + 1rem)); } }
+.cajon-dentro { transform: none; }
+.desvanece-entra { transition: opacity var(--d-lenta) var(--salida); }
+.desvanece-sale { transition: opacity var(--d-media) var(--salida); }
+.transparente { opacity: 0; }
+.opaco { opacity: 1; }
+
+.vacio { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 3rem 1rem 2rem; }
+
+fieldset { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
+.campo {
+  width: 100%; min-height: 3rem; padding: .7rem .95rem; border-radius: .95rem;
+  background: var(--nata); color: var(--cacao); font: inherit;
+  box-shadow: inset 0 0 0 1.5px var(--linea);
+  transition: box-shadow var(--d-rapida);
+}
+.campo::placeholder { color: rgb(138 90 72 / .8); }
+.campo:focus { outline: none; box-shadow: inset 0 0 0 2px var(--coral); }
+.opcion {
+  display: flex; align-items: center; gap: .5rem; min-height: 3rem; padding: .6rem .85rem;
+  border-radius: .95rem; background: var(--nata); cursor: pointer; font-weight: 650;
+  box-shadow: inset 0 0 0 1.5px var(--linea);
+  transition: box-shadow var(--d-rapida);
+}
+.opcion:has(input:checked) { box-shadow: inset 0 0 0 2px var(--cacao); }
+.opcion:has(input:focus-visible) { outline: 3px solid var(--coral); outline-offset: 2px; }
+.opcion input { accent-color: var(--cacao); width: 1.05rem; height: 1.05rem; }
+
+/* La burbuja de WhatsApp: muestra el mensaje exacto antes de enviarlo */
+.chat-fondo {
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 1px 1px, rgb(63 18 6 / .07) 1px, transparent 1.4px) 0 0 / 14px 14px,
+    #efe2d6;
+}
+.burbuja {
+  position: relative; margin-left: auto; max-width: 100%;
+  padding: .75rem .95rem; border-radius: 1rem 1rem .3rem 1rem;
+  background: #dcf8c6; color: #1b1b18;
+  font-size: .9rem; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere;
+  box-shadow: 0 1px 1px rgb(0 0 0 / .08);
+}
+.burbuja::after {
+  content: ''; position: absolute; right: -7px; bottom: 0; width: 14px; height: 14px;
+  background: #dcf8c6; clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+
+.enviado { display: flex; align-items: flex-start; gap: .5rem; font-size: .92rem; font-weight: 600; color: var(--cacao-2); }
+.enviado .check { margin-top: .1rem; color: #2f7d4a; flex: none; }
+
+/* ───────── Efectos que responden a «agregar» ───────── */
+.volador { position: fixed; left: 0; top: 0; z-index: 80; pointer-events: none; will-change: transform; }
+.volador > img { display: block; width: 44px; height: 44px; will-change: transform, opacity; filter: drop-shadow(0 6px 8px rgb(63 18 6 / .3)); }
+.chispa {
+  position: fixed; z-index: 79; pointer-events: none; width: 10px; height: 10px;
+  background: var(--coral); border-radius: 50% 50% 0 50%;
+  will-change: transform, opacity;
+}
+
+/* ───────── Transiciones entre vistas (View Transitions API) ───────── */
+/* «page side-by-side» de transitions.dev: 250ms, 8px, blur 3px */
+::view-transition-old(root) { animation: vt-sale var(--d-corta) var(--salida) both; }
+::view-transition-new(root) { animation: vt-entra var(--d-corta) var(--salida) both; }
+@keyframes vt-sale { to { opacity: 0; transform: translateX(calc(var(--vt-dir, 1) * -8px)); filter: blur(3px); } }
+@keyframes vt-entra { from { opacity: 0; transform: translateX(calc(var(--vt-dir, 1) * 8px)); filter: blur(3px); } }
+html:active-view-transition-type(atras) { --vt-dir: -1; }
+/* lo que no cambia entre vistas se queda quieto */
+.vt-barra { view-transition-name: barra; }
+.vt-goteo { view-transition-name: goteo; }
+.vt-barra-pedido { view-transition-name: barra-pedido; }
+.vt-producto { view-transition-name: producto; }
+/* el mosaico compartido (lista ↔ detalle) viaja con su forma */
+::view-transition-group(producto) { animation-duration: 480ms; animation-timing-function: var(--salida); }
+::view-transition-old(producto), ::view-transition-new(producto) { height: 100%; object-fit: cover; }
+
+/* ───────── Menos movimiento: fuera lo decorativo; los cambios de estado se quedan ───────── */
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-rapida: 1ms; --d-corta: 1ms; --d-media: 1ms; --d-lenta: 1ms; --d-muy-lenta: 1ms; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  html.primera .heroe .linea { opacity: 1; transform: none; filter: none; }
+  .inclinable { transform: none !important; transition: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

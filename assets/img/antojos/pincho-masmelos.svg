@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <defs>
+    <g id="masmelo">
+      <rect x="-19" y="-13" width="38" height="26" rx="10" fill="#fffaf5"/>
+      <rect x="-19" y="5" width="38" height="8" rx="4" fill="#f3e3dc"/>
+      <path d="M-19 0C-12 5-8-3 0 2S12 6 19 0V3Q19 13 9 13H-9Q-19 13-19 3Z" fill="#5a2211"/>
+      <path d="M-12 4C-11 9-10 12-10 14" stroke="#5a2211" stroke-width="4" stroke-linecap="round"/>
+      <path d="M8 5C9 9 9 12 8 15" stroke="#5a2211" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M-13-7H4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+      <path d="M-14 6C-10 8-6 7-4 5" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".25"/>
+    </g>
+  </defs>
+  <ellipse cx="80" cy="144" rx="40" ry="6" fill="#3f1206" opacity=".14"/>
+  <g transform="rotate(-38 80 80)">
+    <rect x="77.5" y="10" width="5" height="140" rx="2.5" fill="#d9a86c"/>
+    <rect x="77.5" y="10" width="2" height="140" rx="1" fill="#eac08b"/>
+    <use href="#masmelo" transform="translate(80 36)"/>
+    <use href="#masmelo" transform="translate(80 68)"/>
+    <use href="#masmelo" transform="translate(80 100)"/>
+  </g>
+  <g fill="#f08fa0"><rect x="112" y="36" width="7" height="3" rx="1.5" transform="rotate(30 115 37)"/><rect x="40" y="110" width="7" height="3" rx="1.5" transform="rotate(-20 43 111)"/></g>
+  <g fill="#f7c85a"><rect x="120" y="54" width="7" height="3" rx="1.5" transform="rotate(-40 123 55)"/><rect x="32" y="92" width="7" height="3" rx="1.5" transform="rotate(50 35 93)"/></g>
+</svg>

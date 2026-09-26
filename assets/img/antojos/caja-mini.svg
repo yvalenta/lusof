@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <ellipse cx="80" cy="143" rx="46" ry="7" fill="#3f1206" opacity=".14"/>
+  <!-- cubo de chocolate -->
+  <path d="M36 70 80 88 124 70V116L80 136 36 116Z" fill="#5a2211"/>
+  <path d="M80 88 124 70V116L80 136Z" fill="#46180a"/>
+  <path d="M36 70 80 52 124 70 80 88Z" fill="#7a3a22"/>
+  <!-- relleno que se asoma -->
+  <path d="M60 64C66 60 74 66 80 62S94 60 100 64L80 72Z" fill="#f6b6b0"/>
+  <path d="M62 66 80 73 98 66" fill="none" stroke="#9a5234" stroke-width="2" opacity=".6"/>
+  <!-- cinta -->
+  <path d="M52 76 58 78.5V124.5L52 122Z" fill="#e0645f"/>
+  <path d="M102 79 108 76.5V122.5L102 125Z" fill="#c9504b"/>
+  <path d="M50 64 94 82 100 79.5 56 61.5Z" fill="#e0645f"/>
+  <path d="M60 79.5 104 61.5 110 64 66 82Z" fill="#e0645f" opacity=".9"/>
+  <!-- moño -->
+  <path d="M80 64C70 56 58 52 56 58 54 64 68 66 80 64Z" fill="#e0645f"/>
+  <path d="M80 64C90 56 102 52 104 58 106 64 92 66 80 64Z" fill="#c9504b"/>
+  <path d="M80 64C76 70 72 78 70 84M80 64C84 70 88 76 92 80" fill="none" stroke="#e0645f" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="80" cy="63" r="5" fill="#b4463f"/>
+  <path d="M40 76V112" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".16"/>
+  <path d="M60 60 76 54" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3"/>
+  <path d="M64 102C68 98 72 106 76 102" fill="none" stroke="#9a5234" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

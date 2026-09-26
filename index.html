@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="es-CO" class="cargando primera">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Lusof Sweet | Chocolates hechos con amor</title>
+  <meta name="description" content="Fresas bañadas, masmelos, mini donas y cajas de regalo hechos a mano. Arma tu pedido y envíalo por WhatsApp al 300 750 3552." />
+  <!-- Sitio sin publicar: que ningún buscador lo indexe. Quitar esta línea el día que salga al aire. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#3f1206" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CO" />
+  <meta property="og:title" content="Lusof Sweet | Chocolates hechos con amor" />
+  <meta property="og:description" content="Antojos desde $2.000 y cajas de regalo. Pedidos por WhatsApp." />
+  <meta property="og:image" content="assets/img/og-lusof.jpg" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+
+  <!-- Si algo falla al cargar, la página no se queda oculta más de 2 s -->
+  <style>html.cargando body { opacity: 0; }</style>
+  <script>setTimeout(function () { document.documentElement.classList.remove('cargando'); }, 2000);</script>
+  <noscript><style>html.cargando body { opacity: 1; }</style></noscript>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gluten:wght@500..900&family=Figtree:wght@400..800&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/img/logo-lusof.webp" fetchpriority="high" />
+
+  <!-- Tailwind v4, compilado en el navegador (sin build). Versión fija. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-crema: #fbf1ec;
+      --color-nata: #fffaf7;
+      --color-arena: #fae6db;
+      --color-rubor: #f6d3cb;
+      --color-durazno: #f1b599;
+      --color-cacao: #3f1206;
+      --color-cacao-2: #6b2a12;
+      --color-cacao-3: #8a5a48;
+      --color-coral: #e0645f;
+      --color-coral-tinta: #b4463f;
+      --color-oro: #d59c42;
+      --font-display: 'Gluten', 'Figtree', ui-rounded, system-ui, sans-serif;
+      --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+    }
+  </style>
+  <link rel="stylesheet" href="assets/css/lusof.css" />
+
+  <!-- Orden importa: íconos → catálogo → app (registra Alpine.store/data) → plugin → Alpine -->
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+  <script defer src="assets/js/catalogo.js"></script>
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.17.4/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.17.4/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="tienda" class="min-h-dvh">
+  <a href="#contenido" class="saltar">Saltar al contenido</a>
+
+  <!-- ═════════════ Barra superior ═════════════ -->
+  <header class="vt-barra sticky top-0 z-40 bg-cacao text-nata">
+    <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:gap-4 sm:px-6">
+      <a href="#/" class="marca flex shrink-0 items-center gap-2.5" aria-label="Lusof Sweet, ir al inicio">
+        <img src="assets/img/logo-lusof.webp" alt="" width="44" height="44" class="size-11 object-contain" />
+        <span class="font-display text-[1.6rem] font-bold leading-none max-[439px]:hidden">Lusof <span class="text-durazno">Sweet</span></span>
+      </a>
+
+      <nav aria-label="Principal" class="ml-auto flex items-center gap-3 sm:gap-6">
+        <a href="#/antojos" class="nav-enlace" :aria-current="$store.ruta.seccionMenu === 'antojos' ? 'page' : null">Antojos</a>
+        <a href="#/regalos" class="nav-enlace" :aria-current="$store.ruta.seccionMenu === 'regalos' ? 'page' : null">Regalos</a>
+        <a href="#/como-pedir" class="nav-enlace max-md:hidden">Cómo pedir</a>
+      </nav>
+
+      <button type="button" class="boton-pedido" data-destino-pedido data-late
+        @click="$store.pedido.abrir()"
+        :aria-label="$store.pedido.unidades ? `Ver tu pedido: ${$store.pedido.unidades} ${$store.pedido.unidades === 1 ? 'producto' : 'productos'}, ${pesos($store.pedido.total)}` : 'Ver tu pedido, está vacío'">
+        <i data-lucide="shopping-bag"></i>
+        <span class="max-sm:hidden">Pedido</span>
+        <span class="contador" x-show="$store.pedido.unidades > 0" x-cloak x-text="$store.pedido.unidades" x-pop="$store.pedido.unidades" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- El chocolate que escurre de la barra: el único movimiento que no se pide -->
+  <div class="vt-goteo relative z-30 -mt-px" aria-hidden="true">
+    <svg class="goteo" viewBox="0 0 1440 150" preserveAspectRatio="xMidYMin slice" fill="currentColor" focusable="false">
+      <path d="M0 0H1440V34Q1410 40 1380 34Q1325 40 1270 34Q1210 40 1150 34Q1080 40 1010 34Q945 40 880 34Q805 40 730 34Q665 40 600 34Q535 40 470 34Q400 40 330 34Q270 40 210 34Q140 40 70 34Q35 40 0 34Z" />
+      <g class="gota" style="--i:0"><path d="M43 30H97C87 32 85 40 84 48L82 82C82 99 58 99 58 82L56 48C55 40 53 32 43 30Z" /><rect class="brillo" x="61" y="50" width="5" height="26" rx="2.5" /></g>
+      <g class="gota" style="--i:3"><path d="M186 30H234C224 32 222 40 221 48L219 54C219 71 201 71 201 54L199 48C198 40 196 32 186 30Z" /></g>
+      <g class="gota" style="--i:1"><path d="M303 30H357C347 32 345 40 344 48L342 116C342 133 318 133 318 116L316 48C315 40 313 32 303 30Z" /><rect class="brillo" x="321" y="52" width="5" height="52" rx="2.5" /></g>
+      <g class="gota" style="--i:5"><path d="M443 30H497C487 32 485 40 484 48L482 68C482 85 458 85 458 68L456 48C455 40 453 32 443 30Z" /></g>
+      <g class="gota" style="--i:8"><path d="M576 30H624C614 32 612 40 611 48L609 48C609 65 591 65 591 48L589 48C588 40 586 32 576 30Z" /></g>
+      <g class="gota" style="--i:2"><path d="M703 30H757C747 32 745 40 744 48L742 100C742 117 718 117 718 100L716 48C715 40 713 32 703 30Z" /><rect class="brillo" x="721" y="52" width="5" height="40" rx="2.5" /></g>
+      <g class="gota" style="--i:6"><path d="M856 30H904C894 32 892 40 891 48L889 64C889 81 871 81 871 64L869 48C868 40 866 32 856 30Z" /></g>
+      <g class="gota" style="--i:0"><path d="M983 30H1037C1027 32 1025 40 1024 48L1022 128C1022 145 998 145 998 128L996 48C995 40 993 32 983 30Z" /><rect class="brillo" x="1001" y="52" width="5" height="64" rx="2.5" /></g>
+      <g class="gota" style="--i:4"><path d="M1123 30H1177C1167 32 1165 40 1164 48L1162 74C1162 91 1138 91 1138 74L1136 48C1135 40 1133 32 1123 30Z" /></g>
+      <g class="gota" style="--i:7"><path d="M1246 30H1294C1284 32 1282 40 1281 48L1279 52C1279 69 1261 69 1261 52L1259 48C1258 40 1256 32 1246 30Z" /></g>
+      <g class="gota" style="--i:2"><path d="M1353 30H1407C1397 32 1395 40 1394 48L1392 94C1392 111 1368 111 1368 94L1366 48C1365 40 1363 32 1353 30Z" /><rect class="brillo" x="1371" y="52" width="5" height="34" rx="2.5" /></g>
+    </svg>
+  </div>
+
+  <main id="contenido" tabindex="-1" class="relative">
+
+    <!-- ═════════════ INICIO ═════════════ -->
+    <template x-if="$store.ruta.vista === 'inicio'">
+      <div>
+        <section class="heroe mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 sm:px-6 md:grid-cols-[1.1fr_.9fr] md:gap-8 md:pb-28">
+          <div>
+            <h1 class="titular font-display text-[clamp(3rem,9vw,6.4rem)] font-extrabold leading-[.92] tracking-[-.015em]" tabindex="-1" data-titulo>
+              <span class="linea" style="--i:0">Chocolates</span>
+              <span class="linea" style="--i:1">hechos con amor</span>
+            </h1>
+            <p class="linea mt-7 max-w-[36ch] text-lg leading-relaxed text-cacao-3 sm:text-xl" style="--i:2">
+              Fresas bañadas, masmelos, mini donas y cajas para regalar, hechos a mano.
+              Elige tus antojos, arma el pedido aquí y nos llega directo a WhatsApp.
+            </p>
+            <div class="linea mt-9 flex flex-wrap gap-3" style="--i:3">
+              <a href="#/antojos" class="boton boton-cacao"><i data-lucide="cookie"></i>Ver los antojos</a>
+              <a :href="$store.pedido.enlaceSaludo" target="_blank" rel="noopener" class="boton boton-claro"><i data-lucide="message-circle"></i>Escribir por WhatsApp</a>
+            </div>
+            <p class="linea mt-6 text-[.95rem] text-cacao-3" style="--i:4">
+              Antojos desde <strong class="precio text-cacao" x-text="pesos(desde('antojos'))"></strong>
+              y regalos desde <strong class="precio text-cacao" x-text="pesos(desde('regalos'))"></strong>.
+            </p>
+          </div>
+
+          <div class="relative mx-auto w-[min(76vw,25rem)] md:w-full md:max-w-[27rem]">
+            <div class="sello-anillo" aria-hidden="true"></div>
+            <img class="sello" src="assets/img/logo-lusof.webp" width="707" height="720"
+              alt="Sello de Lusof Sweet: chocolates hechos con amor, pedidos por WhatsApp al 300 750 3552" />
+            <a href="#/p/torre-eiffel" class="pegatina">
+              <img src="assets/img/antojos/torre-eiffel.svg" alt="" width="30" height="30" class="-my-1 size-[1.9rem]" /> Torre Eiffel <span class="precio" x-text="pesos($store.pedido.producto('torre-eiffel').precio)"></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="mx-auto max-w-6xl px-4 pb-24 sm:px-6" aria-labelledby="t-destacados">
+          <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+            <h2 id="t-destacados" class="font-display text-[clamp(2rem,4.4vw,2.9rem)] font-bold leading-none">Para antojarse</h2>
+            <a href="#/antojos" class="enlace">Ver el menú completo</a>
+          </div>
+          <ul class="mt-8 grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 lg:grid-cols-4" role="list">
+            <template x-for="p in destacados" :key="p.id">
+              <li>
+                <article class="tarjeta relative" x-inclinar data-fila>
+                  <div class="marco-inclinable">
+                    <div class="inclinable mosaico aspect-square" :class="'tono-' + p.tono" :data-mosaico="p.id" >
+                      <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
+                      <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                      <span class="reflejo" aria-hidden="true"></span>
+                      <span class="etiqueta-cat" x-show="p.categoria === 'regalos'">Regalo</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 flex items-start justify-between gap-2">
+                    <div class="min-w-0">
+                      <h3 class="text-[1.05rem] font-bold leading-snug"><a :href="'#/p/' + p.id" class="estirado" x-text="p.corto"></a></h3>
+                      <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(p.precio)"></p>
+                    </div>
+                    <template x-if="p.letras">
+                      <a :href="'#/p/' + p.id" class="agregar relative z-10 shrink-0" :aria-label="'Elegir las letras de la ' + p.nombre"><i data-lucide="pencil"></i></a>
+                    </template>
+                    <template x-if="!p.letras">
+                      <button type="button" class="agregar relative z-10 shrink-0" data-agregar @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                    </template>
+                  </div>
+                </article>
+              </li>
+            </template>
+          </ul>
+        </section>
+
+        <section id="como-pedir" class="como-pedir" aria-labelledby="t-como">
+          <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+            <h2 id="t-como" class="font-display text-[clamp(2rem,4.4vw,2.9rem)] font-bold leading-none">Así pides</h2>
+            <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6" role="list">
+              <li class="paso">
+                <span class="gota-numero" aria-hidden="true"><span>1</span></span>
+                <h3 class="mt-5 text-xl font-bold">Elige tus antojos</h3>
+                <p class="mt-2 max-w-[32ch] text-cacao-3">Agrégalos desde el menú. Puedes cambiar las cantidades cuando quieras antes de enviar.</p>
+              </li>
+              <li class="paso">
+                <span class="gota-numero" aria-hidden="true"><span>2</span></span>
+                <h3 class="mt-5 text-xl font-bold">Dinos para cuándo</h3>
+                <p class="mt-2 max-w-[32ch] text-cacao-3">En tu pedido pones tu nombre, el día y si lo recoges o lo quieres a domicilio.</p>
+              </li>
+              <li class="paso">
+                <span class="gota-numero" aria-hidden="true"><span>3</span></span>
+                <h3 class="mt-5 text-xl font-bold">Envíalo por WhatsApp</h3>
+                <p class="mt-2 max-w-[32ch] text-cacao-3">Se abre WhatsApp con el mensaje listo. Lo envías y seguimos la conversación por ahí.</p>
+              </li>
+            </ol>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <!-- ═════════════ ANTOJOS ═════════════ -->
+    <template x-if="$store.ruta.vista === 'antojos'">
+      <div class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <div class="flex flex-wrap items-end gap-x-4 gap-y-2">
+          <h1 class="font-display text-[clamp(2.6rem,6.5vw,4.4rem)] font-extrabold leading-[.95]" tabindex="-1" data-titulo>Antojos</h1>
+          <span class="chip mb-2" x-text="antojos.length + ' opciones'"></span>
+        </div>
+        <p class="mt-3 max-w-[52ch] text-lg text-cacao-3">Precios por unidad. Toca cualquiera para ver el detalle, o súmalo al pedido con el botón.</p>
+
+        <div class="mt-9 grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start">
+          <ul class="panel p-2 sm:p-3" role="list" aria-label="Menú de antojos">
+            <template x-for="p in antojos" :key="p.id">
+              <li class="fila relative" data-fila>
+                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id">
+                  <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
+                  <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                </div>
+                <div class="min-w-0">
+                  <h2 class="font-semibold leading-snug"><a :href="'#/p/' + p.id" class="estirado" x-text="p.nombre"></a></h2>
+                  <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(p.precio)"></p>
+                </div>
+                <div class="relative z-10">
+                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(p.id) === 0"
+                    @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                  <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(p.id) > 0" x-cloak :aria-label="'Cantidad de ' + p.nombre">
+                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><i data-lucide="minus"></i></button>
+                    <output x-text="$store.pedido.cantidadDe(p.id)" x-pop="$store.pedido.cantidadDe(p.id)" aria-live="off"></output>
+                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><i data-lucide="plus"></i></button>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+
+          <aside class="resumen max-lg:hidden" aria-label="Resumen de tu pedido">
+            <h2 class="font-display text-2xl font-bold">Tu pedido</h2>
+            <template x-if="$store.pedido.unidades === 0">
+              <p class="mt-2 text-cacao-3">Todavía está vacío. Lo que agregues aparece aquí.</p>
+            </template>
+            <template x-if="$store.pedido.unidades > 0">
+              <div>
+                <ul class="mt-3 space-y-1.5 text-[.95rem]" role="list">
+                  <template x-for="l in $store.pedido.lineas" :key="l.clave">
+                    <li class="flex justify-between gap-3">
+                      <span class="min-w-0 truncate"><span class="font-bold" x-text="l.cantidad + ' ×'"></span> <span x-text="$store.pedido.producto(l.id).corto"></span></span>
+                      <span class="precio shrink-0" x-text="pesos($store.pedido.producto(l.id).precio * l.cantidad)"></span>
+                    </li>
+                  </template>
+                </ul>
+                <div class="mt-4 flex items-baseline justify-between border-t border-cacao/10 pt-3">
+                  <span class="font-semibold">Total</span>
+                  <span class="precio text-2xl" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span>
+                </div>
+                <button type="button" class="boton boton-cacao mt-4 w-full" @click="$store.pedido.abrir()"><i data-lucide="message-circle"></i>Revisar y enviar</button>
+              </div>
+            </template>
+          </aside>
+        </div>
+
+        <a href="#/regalos" class="aviso-regalo mt-8">
+          <img src="assets/img/antojos/caja-corazon.svg" alt="" width="56" height="56" class="size-14 shrink-0" />
+          <span><strong class="block text-lg">¿Es para regalar?</strong><span class="text-cacao-3">Mira la caja de corazón con letras y la caja de oso.</span></span>
+          <i data-lucide="chevron-right" class="ml-auto shrink-0"></i>
+        </a>
+      </div>
+    </template>
+
+    <!-- ═════════════ REGALOS ═════════════ -->
+    <template x-if="$store.ruta.vista === 'regalos'">
+      <div class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <h1 class="font-display text-[clamp(2.6rem,6.5vw,4.4rem)] font-extrabold leading-[.95]" tabindex="-1" data-titulo>Regalos</h1>
+        <p class="mt-3 max-w-[52ch] text-lg text-cacao-3">Cajas armadas para entregar. La de corazón lleva las letras de chocolate que tú elijas.</p>
+
+        <ul class="mt-9 grid gap-6 md:grid-cols-2" role="list">
+          <template x-for="p in regalos" :key="p.id">
+            <li>
+              <article class="panel regalo relative p-3 sm:p-4" x-inclinar data-fila>
+                <div class="marco-inclinable">
+                  <div class="inclinable mosaico aspect-[5/4]" :class="'tono-' + p.tono" :data-mosaico="p.id" >
+                    <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
+                    <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                    <span class="reflejo" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 px-2 pt-5">
+                  <h2 class="text-2xl font-bold leading-tight"><a :href="'#/p/' + p.id" class="estirado" x-text="p.nombre"></a></h2>
+                  <p class="precio font-display text-[2.2rem] leading-none text-coral-tinta" x-text="pesos(p.precio)"></p>
+                </div>
+                <p class="px-2 pt-2 text-cacao-3" x-text="p.descripcion"></p>
+                <div class="relative z-10 px-2 pb-2 pt-5">
+                  <template x-if="p.letras">
+                    <a :href="'#/p/' + p.id" class="boton boton-cacao w-full"><i data-lucide="pencil"></i>Elegir las letras</a>
+                  </template>
+                  <template x-if="!p.letras">
+                    <button type="button" class="boton boton-cacao w-full" data-agregar @click="sumar(p.id, $el)"><i data-lucide="gift"></i>Agregar al pedido</button>
+                  </template>
+                </div>
+              </article>
+            </li>
+          </template>
+        </ul>
+
+        <section class="mt-16" aria-labelledby="t-sumale">
+          <h2 id="t-sumale" class="font-display text-[clamp(1.8rem,4vw,2.4rem)] font-bold leading-none">Súmale un antojo</h2>
+          <p class="mt-2 text-cacao-3">Van bien dentro de cualquier caja.</p>
+          <ul class="panel mt-6 max-w-3xl p-2 sm:p-3" role="list">
+            <template x-for="p in antojos.filter(x => ['torre-eiffel', 'fresas-x4', 'pincho-masmelos'].includes(x.id))" :key="p.id">
+              <li class="fila relative" data-fila>
+                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></div>
+                <div class="min-w-0">
+                  <h3 class="font-semibold leading-snug"><a :href="'#/p/' + p.id" class="estirado" x-text="p.nombre"></a></h3>
+                  <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(p.precio)"></p>
+                </div>
+                <div class="relative z-10">
+                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(p.id) === 0" @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                  <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(p.id) > 0" x-cloak :aria-label="'Cantidad de ' + p.nombre">
+                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><i data-lucide="minus"></i></button>
+                    <output x-text="$store.pedido.cantidadDe(p.id)" x-pop="$store.pedido.cantidadDe(p.id)"></output>
+                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><i data-lucide="plus"></i></button>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </section>
+      </div>
+    </template>
+
+    <!-- ═════════════ DETALLE DE PRODUCTO ═════════════ -->
+    <template x-if="$store.ruta.vista === 'producto'">
+      <div class="mx-auto max-w-6xl px-4 pb-24 sm:px-6" x-data="detalle">
+        <a :href="volverHref" @click="volver($event)" class="enlace inline-flex items-center gap-1.5">
+          <i data-lucide="arrow-left" class="size-4"></i><span x-text="p.categoria === 'regalos' ? 'Regalos' : 'Antojos'"></span>
+        </a>
+
+        <div class="mt-5 grid gap-8 md:grid-cols-2 md:items-start md:gap-12">
+          <div class="vt-producto mosaico aspect-square" :class="'tono-' + p.tono">
+            <template x-if="p.letras">
+              <div class="corazon" aria-hidden="true">
+                <svg viewBox="0 0 100 92" class="corazon-forma" focusable="false">
+                  <defs>
+                    <linearGradient id="g-corazon" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#e8625d" />
+                      <stop offset="1" stop-color="#a8322f" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M50 89C21 68 3 51 3 29 3 14 14 3 28 3c9.5 0 17 5.5 22 13.5C55 8.5 62.5 3 72 3c14 0 25 11 25 26 0 22-18 39-47 60Z" fill="url(#g-corazon)" />
+                  <path d="M50 81C25 63 11 49 11 30 11 19 19 11 29 11c8 0 14 5 17.5 12" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <div class="letras" :class="letrasVacias && 'ejemplo'">
+                  <template x-for="(c, i) in vistaLetras" :key="i + c">
+                    <span class="letra" :class="c === ' ' && 'espacio'" x-text="c === ' ' ? '' : c"></span>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <template x-if="!p.letras && p.foto"><img class="foto" :src="p.foto" alt="" decoding="async" @load="$el.classList.add('cargada')" /></template>
+            <template x-if="!p.letras && !p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+          </div>
+
+          <div class="md:pt-4">
+            <span class="chip" x-text="p.categoria === 'regalos' ? 'Regalo' : 'Antojo'"></span>
+            <h1 class="mt-3 font-display text-[clamp(2.3rem,5.2vw,3.7rem)] font-extrabold leading-[.98]" tabindex="-1" data-titulo x-text="p.nombre"></h1>
+            <p class="precio mt-4 font-display text-[2.4rem] leading-none text-coral-tinta" x-text="pesos(p.precio)"></p>
+            <p class="mt-5 max-w-[44ch] text-lg leading-relaxed text-cacao-3" x-text="p.descripcion"></p>
+
+            <template x-if="p.letras">
+              <div class="mt-7">
+                <label for="letras" class="font-bold">Letras para la caja</label>
+                <div class="mt-2 flex gap-2">
+                  <input id="letras" x-ref="letrasInput" class="campo uppercase tracking-[.08em]" x-model="letras" @input="normalizar()"
+                    maxlength="12" placeholder="TE AMO" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                    aria-describedby="letras-ayuda" />
+                  <button type="button" class="boton boton-claro shrink-0 px-4" @click="corazon(); $refs.letrasInput?.focus()" aria-label="Agregar un corazón a las letras">♥</button>
+                </div>
+                <p id="letras-ayuda" class="mt-2 text-sm text-cacao-3">Hasta 12 letras, números o corazones. Si aún no lo decides, déjalo vacío y lo acordamos por WhatsApp.</p>
+              </div>
+            </template>
+
+            <div class="mt-7 flex flex-wrap items-center gap-3">
+              <div class="cantidad" role="group" aria-label="Cantidad">
+                <button type="button" @click="cantidad = Math.max(1, cantidad - 1)" :disabled="cantidad <= 1" aria-label="Una menos"><i data-lucide="minus"></i></button>
+                <output x-text="cantidad" x-pop="cantidad"></output>
+                <button type="button" @click="cantidad = Math.min(99, cantidad + 1)" aria-label="Una más"><i data-lucide="plus"></i></button>
+              </div>
+              <button type="button" class="boton boton-cacao grow" @click="agregar($el)" :class="agregado && 'hecho'">
+                <span class="cambio" x-show="!agregado"><i data-lucide="shopping-bag"></i>Agregar al pedido <span class="precio opacity-80" x-text="pesos(p.precio * cantidad)"></span></span>
+                <span class="cambio" x-show="agregado" x-cloak><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" /></svg>Agregado</span>
+              </button>
+            </div>
+            <p class="mt-4 text-cacao-3" x-show="$store.pedido.cantidadDe(p.id) > 0" x-cloak>
+              Llevas <strong class="text-cacao" x-text="$store.pedido.cantidadDe(p.id)"></strong> en tu pedido.
+              <button type="button" class="enlace" @click="$store.pedido.abrir()">Ver pedido</button>
+            </p>
+          </div>
+        </div>
+
+        <section class="mt-20" aria-labelledby="t-otros">
+          <h2 id="t-otros" class="font-display text-[clamp(1.8rem,4vw,2.4rem)] font-bold leading-none" x-text="p.categoria === 'regalos' ? 'Súmale un antojo' : 'Otros antojos'"></h2>
+          <ul class="panel mt-6 max-w-3xl p-2 sm:p-3" role="list">
+            <template x-for="s in sugeridos" :key="s.id">
+              <li class="fila relative" data-fila>
+                <div class="mosaico" :class="'tono-' + s.tono" :data-mosaico="s.id"><img class="ilustracion" :src="s.ilustracion" alt="" width="160" height="160" decoding="async" /></div>
+                <div class="min-w-0">
+                  <h3 class="font-semibold leading-snug"><a :href="'#/p/' + s.id" class="estirado" x-text="s.nombre"></a></h3>
+                  <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(s.precio)"></p>
+                </div>
+                <div class="relative z-10">
+                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(s.id) === 0" @click="sumar(s.id, $el)" :aria-label="'Agregar ' + s.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                  <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(s.id) > 0" x-cloak :aria-label="'Cantidad de ' + s.nombre">
+                    <button type="button" @click="restar(s.id, $el)" :aria-label="'Quitar una unidad de ' + s.nombre"><i data-lucide="minus"></i></button>
+                    <output x-text="$store.pedido.cantidadDe(s.id)" x-pop="$store.pedido.cantidadDe(s.id)"></output>
+                    <button type="button" data-mas @click="mas(s.id, $el)" :aria-label="'Agregar otra unidad de ' + s.nombre"><i data-lucide="plus"></i></button>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </section>
+      </div>
+    </template>
+  </main>
+
+  <!-- ═════════════ Franja de WhatsApp (pie) ═════════════ -->
+  <footer class="pie bg-cacao text-nata">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-28 pt-16 sm:px-6 md:grid-cols-[1fr_auto] md:items-center md:pb-16">
+      <div>
+        <h2 class="font-display text-[clamp(2rem,4.6vw,3rem)] font-bold leading-none">Pedidos por WhatsApp</h2>
+        <a :href="$store.pedido.enlaceSaludo" target="_blank" rel="noopener" class="numero mt-4 inline-flex items-center gap-3 font-display text-[clamp(2.2rem,6vw,3.6rem)] font-extrabold leading-none text-durazno">
+          <i data-lucide="message-circle" class="size-[.8em]"></i><span x-text="whatsappVisible">300 750 3552</span>
+        </a>
+        <p class="mt-5 max-w-[46ch] text-nata/75">Escríbenos para pedidos, fechas especiales o cualquier pregunta. Si ya armaste tu pedido aquí, envíalo desde la bolsa.</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <button type="button" class="boton boton-nata" @click="$store.pedido.abrir()"><i data-lucide="shopping-bag"></i>Ver mi pedido</button>
+          <a href="#/antojos" class="boton boton-borde"><i data-lucide="cookie"></i>Ver los antojos</a>
+        </div>
+      </div>
+      <figure class="qr max-md:hidden">
+        <img src="assets/img/qr-whatsapp.svg" width="176" height="176" alt="Código QR que abre el chat de WhatsApp de Lusof Sweet" />
+        <figcaption>Escanéalo con la cámara del celular</figcaption>
+      </figure>
+    </div>
+    <p class="mx-auto max-w-6xl border-t border-nata/10 px-4 py-6 text-sm text-nata/60 sm:px-6">© 2026 Lusof Sweet. Chocolates hechos con amor.</p>
+  </footer>
+
+  <!-- ═════════════ Barra de pedido (móvil) ═════════════ -->
+  <div class="vt-barra-pedido barra-pedido md:hidden" x-show="$store.pedido.unidades > 0 && !$store.pedido.abierto" x-cloak
+    x-transition:enter="barra-entra" x-transition:enter-start="barra-fuera" x-transition:enter-end="barra-dentro"
+    x-transition:leave="barra-sale" x-transition:leave-start="barra-dentro" x-transition:leave-end="barra-fuera">
+    <button type="button" data-late @click="$store.pedido.abrir()" class="flex w-full items-center justify-between gap-3 rounded-full bg-cacao px-5 py-3.5 text-nata shadow-[0_18px_40px_-16px_rgb(63_18_6/.9)]">
+      <span class="flex items-center gap-2 font-bold"><i data-lucide="shopping-bag" class="size-5"></i>Tu pedido
+        <span class="rounded-full bg-nata/15 px-2 py-0.5 text-sm tabular-nums" x-text="$store.pedido.unidades" x-pop="$store.pedido.unidades"></span></span>
+      <span class="flex items-center gap-1.5"><span class="precio" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span><i data-lucide="chevron-up" class="size-5"></i></span>
+    </button>
+  </div>
+
+  <!-- ═════════════ Cajón del pedido ═════════════ -->
+  <div class="cajon-fondo" x-show="$store.pedido.abierto" x-cloak @click="$store.pedido.cerrar()"
+    x-transition:enter="desvanece-entra" x-transition:enter-start="transparente" x-transition:enter-end="opaco"
+    x-transition:leave="desvanece-sale" x-transition:leave-start="opaco" x-transition:leave-end="transparente"></div>
+
+  <section class="cajon" role="dialog" aria-modal="true" aria-labelledby="t-pedido"
+    x-show="$store.pedido.abierto" x-cloak
+    x-trap.inert.noscroll="$store.pedido.abierto"
+    @keydown.escape.window="$store.pedido.abierto && $store.pedido.cerrar()"
+    x-transition:enter="cajon-entra" x-transition:enter-start="cajon-fuera" x-transition:enter-end="cajon-dentro"
+    x-transition:leave="cajon-sale" x-transition:leave-start="cajon-dentro" x-transition:leave-end="cajon-fuera">
+    <div class="cajon-agarre" aria-hidden="true"></div>
+    <header class="flex items-center justify-between gap-3 px-5 pb-3 pt-4">
+      <h2 id="t-pedido" class="font-display text-[2rem] font-extrabold leading-none">Tu pedido</h2>
+      <button type="button" class="boton-icono hover:bg-arena" @click="$store.pedido.cerrar()" aria-label="Cerrar el pedido"><i data-lucide="x"></i></button>
+    </header>
+
+    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-6">
+      <template x-if="$store.pedido.lineas.length === 0">
+        <div class="vacio">
+          <img src="assets/img/antojos/fresas.svg" alt="" width="112" height="112" class="size-28" />
+          <p class="mt-4 text-lg font-bold">Tu pedido está vacío</p>
+          <p class="mt-1 text-cacao-3">Agrega un antojo o una caja de regalo y aparece aquí, con el mensaje listo para WhatsApp.</p>
+          <a href="#/antojos" class="boton boton-cacao mt-6" @click="$store.pedido.cerrar()"><i data-lucide="cookie"></i>Ver los antojos</a>
+        </div>
+      </template>
+
+      <template x-if="$store.pedido.lineas.length > 0">
+        <div>
+          <ul class="panel p-1.5" role="list" aria-label="Productos del pedido">
+            <template x-for="l in $store.pedido.lineas" :key="l.clave">
+              <li class="fila linea-pedido relative" data-fila>
+                <div class="mosaico" :class="'tono-' + $store.pedido.producto(l.id).tono"><img class="ilustracion" :src="$store.pedido.producto(l.id).foto || $store.pedido.producto(l.id).ilustracion" alt="" width="160" height="160" /></div>
+                <div class="min-w-0">
+                  <p class="font-semibold leading-snug" x-text="$store.pedido.producto(l.id).nombre"></p>
+                  <p class="text-sm text-cacao-3" x-show="$store.pedido.producto(l.id).letras">
+                    Letras: <strong class="tracking-[.06em] text-cacao" x-text="l.letras || 'por definir'"></strong>
+                  </p>
+                  <p class="precio mt-0.5 text-coral-tinta" x-text="pesos($store.pedido.producto(l.id).precio * l.cantidad)" x-pop="l.cantidad"></p>
+                </div>
+                <div class="cantidad" role="group" :aria-label="'Cantidad de ' + $store.pedido.producto(l.id).nombre">
+                  <button type="button" @click="$store.pedido.cambiar(l.clave, -1)" :aria-label="l.cantidad === 1 ? 'Quitar ' + $store.pedido.producto(l.id).nombre + ' del pedido' : 'Quitar una unidad de ' + $store.pedido.producto(l.id).nombre">
+                    <i data-lucide="trash-2" x-show="l.cantidad === 1"></i><i data-lucide="minus" x-show="l.cantidad > 1"></i>
+                  </button>
+                  <output x-text="l.cantidad"></output>
+                  <button type="button" @click="$store.pedido.cambiar(l.clave, 1)" :aria-label="'Agregar otra unidad de ' + $store.pedido.producto(l.id).nombre"><i data-lucide="plus"></i></button>
+                </div>
+              </li>
+            </template>
+          </ul>
+
+          <fieldset class="mt-7 space-y-4">
+            <legend class="font-display text-2xl font-bold">Tus datos</legend>
+            <p class="!mt-1 text-sm text-cacao-3">Todo es opcional: lo que escribas va en el mensaje.</p>
+            <div>
+              <label for="p-nombre" class="mb-1.5 block font-semibold">Nombre</label>
+              <input id="p-nombre" class="campo" x-model="$store.pedido.datos.nombre" autocomplete="name" maxlength="80" placeholder="¿A nombre de quién?" />
+            </div>
+            <div>
+              <label for="p-cuando" class="mb-1.5 block font-semibold">¿Para cuándo?</label>
+              <input id="p-cuando" class="campo" x-model="$store.pedido.datos.cuando" maxlength="80" placeholder="Ej.: sábado en la tarde" />
+            </div>
+            <div role="radiogroup" aria-labelledby="p-entrega">
+              <p id="p-entrega" class="mb-1.5 font-semibold">¿Cómo lo recibes?</p>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="opcion"><input type="radio" name="entrega" value="recoger" x-model="$store.pedido.datos.entrega" /><i data-lucide="store" class="size-4"></i>Lo recojo</label>
+                <label class="opcion"><input type="radio" name="entrega" value="domicilio" x-model="$store.pedido.datos.entrega" /><i data-lucide="bike" class="size-4"></i>A domicilio</label>
+              </div>
+            </div>
+            <div x-show="$store.pedido.datos.entrega === 'domicilio'" x-cloak>
+              <label for="p-direccion" class="mb-1.5 block font-semibold">Dirección</label>
+              <input id="p-direccion" class="campo" x-model="$store.pedido.datos.direccion" autocomplete="street-address" maxlength="160" placeholder="Barrio, calle y número" />
+              <p class="mt-1.5 text-sm text-cacao-3">El costo del domicilio lo acordamos por WhatsApp.</p>
+            </div>
+            <div>
+              <label for="p-nota" class="mb-1.5 block font-semibold">Nota</label>
+              <textarea id="p-nota" class="campo min-h-[5.5rem] resize-y" x-model="$store.pedido.datos.nota" maxlength="300" placeholder="Una dedicatoria, una alergia, la adición que quieres…"></textarea>
+            </div>
+          </fieldset>
+
+          <div class="mt-8">
+            <p class="font-display text-2xl font-bold">Así le llega a Lusof</p>
+            <div class="chat-fondo mt-3 p-3 pl-10">
+              <div class="burbuja" x-text="$store.pedido.mensaje"></div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <footer class="border-t border-cacao/10 bg-crema px-5 pb-[calc(1.1rem+env(safe-area-inset-bottom))] pt-4" x-show="$store.pedido.lineas.length > 0">
+      <div class="flex items-baseline justify-between">
+        <span class="font-semibold">Total <span class="font-normal text-cacao-3" x-text="'(' + $store.pedido.unidades + ($store.pedido.unidades === 1 ? ' producto)' : ' productos)')"></span></span>
+        <span class="precio text-[1.7rem]" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span>
+      </div>
+      <a :href="$store.pedido.enlace" target="_blank" rel="noopener" class="boton boton-cacao mt-3 w-full text-[1.05rem]" @click="$store.pedido.marcarEnviado()">
+        <i data-lucide="send"></i>Enviar pedido por WhatsApp
+      </a>
+      <p class="enviado mt-3" x-show="$store.pedido.enviado" x-cloak>
+        <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" /></svg>
+        <span>Abrimos WhatsApp con tu pedido. Falta que lo envíes desde allá.</span>
+      </p>
+      <button type="button" class="mt-2 w-full rounded-full py-2 text-sm font-semibold text-cacao-3 hover:text-coral-tinta" @click="$store.pedido.vaciar()"
+        x-text="$store.pedido.confirmandoVaciar ? 'Toca otra vez para vaciar el pedido' : 'Vaciar pedido'"></button>
+    </footer>
+  </section>
+
+  <!-- Anuncios para lectores de pantalla -->
+  <p class="sr-only" role="status" aria-live="polite" x-text="$store.pedido.anuncio"></p>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <defs>
+    <g id="masmelo-banado">
+      <rect x="-18" y="-12" width="36" height="24" rx="10" fill="#5a2211"/>
+      <path d="M-18-2Q-18-12-8-12H8Q18-12 18-2" fill="#7a3a22"/>
+      <path d="M-10-6H6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".35"/>
+      <path d="M-8 10C-8 16-7 19-6 21" stroke="#5a2211" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M9 10C9 14 10 16 10 18" stroke="#5a2211" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <ellipse cx="80" cy="144" rx="48" ry="6" fill="#3f1206" opacity=".14"/>
+  <!-- fuente al fondo -->
+  <path d="M34 140H90L84 128H40Z" fill="#e7c7b4"/>
+  <ellipse cx="62" cy="128" rx="24" ry="5" fill="#f3dccd"/>
+  <rect x="58" y="70" width="8" height="58" fill="#e7c7b4"/>
+  <ellipse cx="62" cy="94" rx="20" ry="5" fill="#f3dccd"/>
+  <path d="M42 94C42 104 44 112 46 126H78C80 112 82 104 82 94Z" fill="#6b2a12" opacity=".92"/>
+  <ellipse cx="62" cy="68" rx="13" ry="4" fill="#f3dccd"/>
+  <path d="M49 68C49 76 51 84 52 92H72C73 84 75 76 75 68Z" fill="#6b2a12" opacity=".92"/>
+  <path d="M48 98 50 122M54 72 55 88" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".25"/>
+  <path d="M62 64C62 56 63 50 62 44" stroke="#6b2a12" stroke-width="5" stroke-linecap="round"/>
+  <!-- pincho al frente -->
+  <g transform="rotate(24 104 84)">
+    <rect x="101.5" y="22" width="5" height="126" rx="2.5" fill="#d9a86c"/>
+    <rect x="101.5" y="22" width="2" height="126" rx="1" fill="#eac08b"/>
+    <use href="#masmelo-banado" transform="translate(104 44)"/>
+    <use href="#masmelo-banado" transform="translate(104 74)"/>
+    <use href="#masmelo-banado" transform="translate(104 104)"/>
+  </g>
+  <circle cx="126" cy="58" r="3" fill="#5a2211"/>
+  <circle cx="119" cy="134" r="2.4" fill="#5a2211"/>
+</svg>
