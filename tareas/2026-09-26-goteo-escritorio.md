@@ -1,5 +1,5 @@
 ---
-estado: en-curso
+estado: hecha
 dueño: sesión
 fecha: 2026-09-26
 tema: el goteo de chocolate sale cortado plano en escritorio ancho (≳1500 px)
@@ -43,3 +43,9 @@ Probar con el harness de celular/escritorio (playwright-core) a 360, 390, 414, 1
   la gota más larga ya salía recortada 2–4 px (768–1440). `css.mjs --comprobar`,
   `catalogo.mjs --comprobar` y 61/61 pruebas en verde. Falta el visto de Yonatan y su GO para
   empujar (empujar publica).
+- 2026-09-26: hecha. Yonatan dio el GO para publicar y cerrar («push deploy y cierra sesion»)
+  sobre el informe con las capturas antes/después a 1440, 1920 y 2735. Empujado `aa2b130`;
+  GitHub Pages lo sirvió al ~30 s (`viewBox="-1440 0 4320 150"` en <https://lusof.ynt.codes>).
+  La misma medición contra producción, a 360/390/414/768/1280/1440/1920/2735/3840 en `#/`,
+  `#/antojos` y `#/p/torre-eiffel`: 0 gotas cortadas, holgura ≥ 3,9 px, ninguna pisa texto ni
+  controles. Límite conocido: pasado ~3974 px de ancho vuelve a recortar a lo alto.
