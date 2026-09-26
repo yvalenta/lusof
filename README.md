@@ -25,11 +25,23 @@ misma configuración para el panel de vista previa.
 | pieza | versión fija | para qué |
 |---|---|---|
 | `@tailwindcss/browser` | 4.3.3 | utilidades de layout; tokens de marca en `@theme` dentro de `index.html` |
-| `alpinejs` + `@alpinejs/focus` | 3.17.4 | estado (`Alpine.store`), vistas (`x-if`), foco atrapado en el cajón (`x-trap`) |
-| `lucide` (UMD) | 1.48.0 | íconos |
+| `alpinejs` | 3.17.4 | estado (`Alpine.store`), vistas (`x-if`), directivas propias (`x-imagen`, `x-pop`, `x-inclinar`) |
+| íconos de Lucide | 1.48.0 | los 15 que se usan, copiados como sprite SVG al inicio del `<body>` (ISC); sin script |
 | Gluten + Figtree (Google Fonts) | — | titulares / texto |
 
-Las cuatro eran la última versión del registro de npm el 2026-09-26. Tailwind en el
+Eran la última versión del registro de npm el 2026-09-26 (medido dos veces ese día).
+`@alpinejs/focus` y el UMD de Lucide (~444 KB) salieron ese día: el cajón es un
+`<dialog>` nativo y los íconos van en el sprite. Para sumar un ícono: copiar su `<path>`
+de `https://cdn.jsdelivr.net/npm/lucide-static@1.48.0/icons/<nombre>.svg` a un
+`<symbol id="i-<nombre>">` del sprite y usarlo con `<svg class="icono" width="24"
+height="24" aria-hidden="true"><use href="#i-<nombre>"/></svg>`.
+
+CSS de plataforma que el sitio usa (navegadores de 2025 en adelante; donde falta, se
+degrada sin romper): `<dialog>` + `showModal()` y `closedby`, `@starting-style` con
+`transition-behavior: allow-discrete` (entrada y salida del cajón y de la dirección),
+`interpolate-size` (altura hasta `auto`), `field-sizing: content` (la nota), color
+relativo `rgb(from var(--color-cacao) r g b / α)`, `view-transition-class` y tipos de
+View Transitions. Tailwind en el
 navegador es «solo para desarrollo» según su documentación: para un sitio local está
 bien; el día que se publique conviene compilarlo (Tailwind CLI) y el `@theme` pasa casi
 igual.
@@ -37,23 +49,30 @@ igual.
 ## Estructura
 
 ```
-index.html               todas las vistas (plantillas x-if), barra, goteo, pie, cajón del pedido
+index.html               todas las vistas (plantillas x-if), sprite de íconos, barra, goteo, pie, cajón
 assets/js/catalogo.js    productos y precios — lo único que hay que tocar para cambiar el menú
 assets/js/app.js         rutas por hash, Alpine.store('pedido'), mensaje de WhatsApp, efectos
 assets/css/lusof.css     marca, mosaicos, cajón, transiciones y «reducir movimiento»
 assets/img/antojos/      11 ilustraciones SVG propias (respaldo mientras no haya fotos)
+assets/fotos/            fotos reales de producto, cuando lleguen (ver LEEME.md)
 assets/img/              logo recortado, favicon, QR de WhatsApp, imagen para compartir
 docs/                    investigación de base (Resplandor, transitions.dev, CDN)
 ```
 
 ## Contratos que no se rompen
 
-- **Orden de scripts** en `<head>`: lucide → catalogo.js → app.js → focus → alpine, todos
-  `defer`. `app.js` registra stores y directivas en `alpine:init`, así que debe correr
-  antes que Alpine.
-- **Lucide se llama una sola vez** (`createIcons({ inTemplates: true })` al tope de
-  `app.js`), antes de que Alpine clone plantillas. El `<svg>` que deja conserva
-  `data-lucide`: volver a llamarlo reemplaza íconos ya pintados.
+- **Orden de scripts** en `<head>`: catalogo.js → app.js → alpine, todos `defer`.
+  `app.js` registra stores y directivas en `alpine:init`, así que debe correr antes que
+  Alpine.
+- **La paleta vive en un solo lugar**: el `@theme static` de `index.html`. `lusof.css` la
+  lee como `var(--color-*)`; `static` es lo que garantiza que Tailwind publique todas las
+  variables aunque ninguna utilidad las use.
+- **El cajón es un `<dialog>` modal** gobernado por `$store.pedido.abierto` (`x-effect`
+  llama `showModal()`/`close()`); Escape y el toque en el fondo cierran por el evento
+  `close`, que avisa al store. Foco atrapado, fondo inerte y devolución del foco son del
+  navegador.
+- **Imágenes de producto solo por `x-imagen="producto"`**: decide foto o ilustración en
+  todas las vistas. No poner `<img>` de producto a mano.
 - **Rutas**: `#/`, `#/antojos`, `#/regalos`, `#/como-pedir`, `#/p/<id>`. Cada cambio pasa
   por `document.startViewTransition` y espera `Alpine.nextTick()` antes de la foto nueva;
   el mosaico del producto viaja entre lista y detalle (`view-transition-name: producto`).
@@ -76,9 +95,12 @@ el sitio supone, marcado para revisar:
 
 ## Fotos
 
-Cada producto tiene `foto: null` en `catalogo.js`. Para usar una foto real: guardarla en
-`assets/fotos/<id>.webp` (cuadrada, ~900 px) y poner la ruta en `foto`. Mientras tanto se
-ve la ilustración. El flyer tiene una foto de la Torre Eiffel que vale la pena traer.
+Pensado para cambiar los dibujos por fotos reales de a una: guardar la foto en
+`assets/fotos/<id>.webp` y poner esa ruta en `foto` del producto en `catalogo.js`. La
+foto sale a la vez en el menú, el detalle, los sugeridos y el cajón (`x-imagen`), y si
+la ruta falla se sigue viendo el dibujo. Guía completa, tamaños y nombres exactos:
+[`assets/fotos/LEEME.md`](assets/fotos/LEEME.md). El flyer tiene una foto de la Torre
+Eiffel que vale la pena traer.
 
 ## Tareas
 

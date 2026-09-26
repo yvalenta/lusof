@@ -3,8 +3,9 @@
 // agregar la foto de un producto, se edita solo este archivo.
 //
 //   foto:        ruta relativa a la raíz del sitio (p. ej. 'assets/fotos/torre-eiffel.webp').
-//                Con null se muestra la ilustración. El sitio no pide archivos que no
-//                existen, así que no hay que tener todas las fotos para empezar.
+//                Con null se muestra la ilustración. Poner la ruta basta para que la foto
+//                salga en todas las vistas; si no carga, vuelve la ilustración. Guía y
+//                nombres de archivo en assets/fotos/LEEME.md.
 //   ilustracion: el dibujo SVG del producto (assets/img/antojos/), el respaldo de la foto.
 //   tono:        fondo del mosaico: crema, rubor, coral u oro (clases .tono-* en lusof.css).
 //   emoji:       solo para textos cortos; no se usa como imagen.

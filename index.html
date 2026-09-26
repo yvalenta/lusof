@@ -30,33 +30,54 @@
   <!-- Tailwind v4, compilado en el navegador (sin build). Versión fija. -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
   <style type="text/tailwindcss">
-    @theme {
-      --color-crema: #fbf1ec;
-      --color-nata: #fffaf7;
-      --color-arena: #fae6db;
+    /* La paleta de la marca, única fuente: muestreada del logo (assets/img/lusof-original.jpeg).
+       `static` publica todas las variables en :root aunque ninguna utilidad las use, porque
+       assets/css/lusof.css también las lee. */
+    @theme static {
+      --color-crema: #fbf1ec;       /* fondo: un rubor más claro que el del sello */
+      --color-nata: #fffaf7;        /* superficies */
+      --color-arena: #fae6db;       /* el crema exacto del sello */
       --color-rubor: #f6d3cb;
-      --color-durazno: #f1b599;
-      --color-cacao: #3f1206;
+      --color-durazno: #f1b599;     /* el aro del sello */
+      --color-cacao: #3f1206;       /* texto y chocolate */
       --color-cacao-2: #6b2a12;
-      --color-cacao-3: #8a5a48;
-      --color-coral: #e0645f;
-      --color-coral-tinta: #b4463f;
-      --color-oro: #d59c42;
+      --color-cacao-3: #8a5a48;     /* texto secundario: 5.2:1 sobre crema */
+      --color-coral: #e0645f;       /* «Sweet» */
+      --color-coral-tinta: #b4463f; /* coral apto para texto: 4.9:1 sobre crema */
+      --color-oro: #d59c42;         /* el filete dorado del sello */
       --font-display: 'Gluten', 'Figtree', ui-rounded, system-ui, sans-serif;
       --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
     }
   </style>
   <link rel="stylesheet" href="assets/css/lusof.css" />
 
-  <!-- Orden importa: íconos → catálogo → app (registra Alpine.store/data) → plugin → Alpine -->
-  <script defer src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+  <!-- Orden importa: catálogo → app (registra Alpine.store/data) → Alpine -->
   <script defer src="assets/js/catalogo.js"></script>
   <script defer src="assets/js/app.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.17.4/dist/cdn.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.17.4/dist/cdn.min.js"></script>
 </head>
 
 <body x-data="tienda" class="min-h-dvh">
+  <!-- Íconos: Lucide 1.48.0 (ISC), solo los que usa el sitio. Se pintan con
+       <svg class="icono"><use href="#i-nombre"/></svg>; trazo y color en lusof.css. -->
+  <svg xmlns="http://www.w3.org/2000/svg" hidden>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol>
+    <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="18.5" cy="17.5" r="3.5" /> <circle cx="5.5" cy="17.5" r="3.5" /> <circle cx="15" cy="5" r="1" /> <path d="M12 17.5V14l-3-3 4-3 2 3h2" /></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+    <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></symbol>
+    <symbol id="i-cookie" viewBox="0 0 24 24"><path d="M11 17h.01" /> <path d="M11.496 2c.324-.016.558.292.529.615a4 4 0 004.235 4.368.713.713 0 01.758.757 4 4 0 004.366 4.237c.323-.03.63.204.614.527a10 10 0 01-2.915 6.566A1 1 0 114.93 4.918 10 10 0 0111.496 2" /> <path d="M12 12h.01" /> <path d="M16 16h.01" /> <path d="M16 3h.01" /> <path d="M21 4h.01" /> <path d="M21 8h.01" /> <path d="M7 14h.01" /> <path d="M9 8h.01" /></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path d="M12 7v14" /> <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" /> <path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5" /> <rect x="3" y="7" width="18" height="4" rx="1" /></symbol>
+    <symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /> <path d="m21.854 2.147-10.94 10.939" /></symbol>
+    <symbol id="i-shopping-bag" viewBox="0 0 24 24"><path d="M16 10a4 4 0 0 1-8 0" /> <path d="M3.103 6.034h17.794" /> <path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" /></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5" /> <path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244" /> <path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05" /></symbol>
+    <symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" /> <path d="M14 11v6" /> <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /> <path d="M3 6h18" /> <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+  </svg>
+
   <a href="#contenido" class="saltar">Saltar al contenido</a>
 
   <!-- ═════════════ Barra superior ═════════════ -->
@@ -76,7 +97,7 @@
       <button type="button" class="boton-pedido" data-destino-pedido data-late
         @click="$store.pedido.abrir()"
         :aria-label="$store.pedido.unidades ? `Ver tu pedido: ${$store.pedido.unidades} ${$store.pedido.unidades === 1 ? 'producto' : 'productos'}, ${pesos($store.pedido.total)}` : 'Ver tu pedido, está vacío'">
-        <i data-lucide="shopping-bag"></i>
+        <svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-shopping-bag"/></svg>
         <span class="max-sm:hidden">Pedido</span>
         <span class="contador" x-show="$store.pedido.unidades > 0" x-cloak x-text="$store.pedido.unidades" x-pop="$store.pedido.unidades" aria-hidden="true"></span>
       </button>
@@ -117,8 +138,8 @@
               Elige tus antojos, arma el pedido aquí y nos llega directo a WhatsApp.
             </p>
             <div class="linea mt-9 flex flex-wrap gap-3" style="--i:3">
-              <a href="#/antojos" class="boton boton-cacao"><i data-lucide="cookie"></i>Ver los antojos</a>
-              <a :href="$store.pedido.enlaceSaludo" target="_blank" rel="noopener" class="boton boton-claro"><i data-lucide="message-circle"></i>Escribir por WhatsApp</a>
+              <a href="#/antojos" class="boton boton-cacao"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-cookie"/></svg>Ver los antojos</a>
+              <a :href="$store.pedido.enlaceSaludo" target="_blank" rel="noopener" class="boton boton-claro"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-message-circle"/></svg>Escribir por WhatsApp</a>
             </div>
             <p class="linea mt-6 text-[.95rem] text-cacao-3" style="--i:4">
               Antojos desde <strong class="precio text-cacao" x-text="pesos(desde('antojos'))"></strong>
@@ -146,9 +167,7 @@
               <li>
                 <article class="tarjeta relative" x-inclinar data-fila>
                   <div class="marco-inclinable">
-                    <div class="inclinable mosaico aspect-square" :class="'tono-' + p.tono" :data-mosaico="p.id" >
-                      <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
-                      <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                    <div class="inclinable mosaico aspect-square" :class="'tono-' + p.tono" :data-mosaico="p.id" x-imagen="p">
                       <span class="reflejo" aria-hidden="true"></span>
                       <span class="etiqueta-cat" x-show="p.categoria === 'regalos'">Regalo</span>
                     </div>
@@ -159,10 +178,10 @@
                       <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(p.precio)"></p>
                     </div>
                     <template x-if="p.letras">
-                      <a :href="'#/p/' + p.id" class="agregar relative z-10 shrink-0" :aria-label="'Elegir las letras de la ' + p.nombre"><i data-lucide="pencil"></i></a>
+                      <a :href="'#/p/' + p.id" class="agregar relative z-10 shrink-0" :aria-label="'Elegir las letras de la ' + p.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-pencil"/></svg></a>
                     </template>
                     <template x-if="!p.letras">
-                      <button type="button" class="agregar relative z-10 shrink-0" data-agregar @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                      <button type="button" class="agregar relative z-10 shrink-0" data-agregar @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                     </template>
                   </div>
                 </article>
@@ -209,9 +228,7 @@
           <ul class="panel p-2 sm:p-3" role="list" aria-label="Menú de antojos">
             <template x-for="p in antojos" :key="p.id">
               <li class="fila relative" data-fila>
-                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id">
-                  <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
-                  <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id" x-imagen="p">
                 </div>
                 <div class="min-w-0">
                   <h2 class="font-semibold leading-snug"><a :href="'#/p/' + p.id" class="estirado" x-text="p.nombre"></a></h2>
@@ -219,11 +236,11 @@
                 </div>
                 <div class="relative z-10">
                   <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(p.id) === 0"
-                    @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                    @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(p.id) > 0" x-cloak :aria-label="'Cantidad de ' + p.nombre">
-                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><i data-lucide="minus"></i></button>
+                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-minus"/></svg></button>
                     <output x-text="$store.pedido.cantidadDe(p.id)" x-pop="$store.pedido.cantidadDe(p.id)" aria-live="off"></output>
-                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><i data-lucide="plus"></i></button>
+                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   </div>
                 </div>
               </li>
@@ -249,7 +266,7 @@
                   <span class="font-semibold">Total</span>
                   <span class="precio text-2xl" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span>
                 </div>
-                <button type="button" class="boton boton-cacao mt-4 w-full" @click="$store.pedido.abrir()"><i data-lucide="message-circle"></i>Revisar y enviar</button>
+                <button type="button" class="boton boton-cacao mt-4 w-full" @click="$store.pedido.abrir()"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-message-circle"/></svg>Revisar y enviar</button>
               </div>
             </template>
           </aside>
@@ -258,7 +275,7 @@
         <a href="#/regalos" class="aviso-regalo mt-8">
           <img src="assets/img/antojos/caja-corazon.svg" alt="" width="56" height="56" class="size-14 shrink-0" />
           <span><strong class="block text-lg">¿Es para regalar?</strong><span class="text-cacao-3">Mira la caja de corazón con letras y la caja de oso.</span></span>
-          <i data-lucide="chevron-right" class="ml-auto shrink-0"></i>
+          <svg class="icono ml-auto shrink-0" width="24" height="24" aria-hidden="true"><use href="#i-chevron-right"/></svg>
         </a>
       </div>
     </template>
@@ -274,9 +291,7 @@
             <li>
               <article class="panel regalo relative p-3 sm:p-4" x-inclinar data-fila>
                 <div class="marco-inclinable">
-                  <div class="inclinable mosaico aspect-[5/4]" :class="'tono-' + p.tono" :data-mosaico="p.id" >
-                    <template x-if="p.foto"><img class="foto" :src="p.foto" alt="" loading="lazy" decoding="async" @load="$el.classList.add('cargada')" /></template>
-                    <template x-if="!p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
+                  <div class="inclinable mosaico aspect-[5/4]" :class="'tono-' + p.tono" :data-mosaico="p.id" x-imagen="p">
                     <span class="reflejo" aria-hidden="true"></span>
                   </div>
                 </div>
@@ -287,10 +302,10 @@
                 <p class="px-2 pt-2 text-cacao-3" x-text="p.descripcion"></p>
                 <div class="relative z-10 px-2 pb-2 pt-5">
                   <template x-if="p.letras">
-                    <a :href="'#/p/' + p.id" class="boton boton-cacao w-full"><i data-lucide="pencil"></i>Elegir las letras</a>
+                    <a :href="'#/p/' + p.id" class="boton boton-cacao w-full"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-pencil"/></svg>Elegir las letras</a>
                   </template>
                   <template x-if="!p.letras">
-                    <button type="button" class="boton boton-cacao w-full" data-agregar @click="sumar(p.id, $el)"><i data-lucide="gift"></i>Agregar al pedido</button>
+                    <button type="button" class="boton boton-cacao w-full" data-agregar @click="sumar(p.id, $el)"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-gift"/></svg>Agregar al pedido</button>
                   </template>
                 </div>
               </article>
@@ -304,17 +319,17 @@
           <ul class="panel mt-6 max-w-3xl p-2 sm:p-3" role="list">
             <template x-for="p in antojos.filter(x => ['torre-eiffel', 'fresas-x4', 'pincho-masmelos'].includes(x.id))" :key="p.id">
               <li class="fila relative" data-fila>
-                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></div>
+                <div class="mosaico" :class="'tono-' + p.tono" :data-mosaico="p.id" x-imagen="p"></div>
                 <div class="min-w-0">
                   <h3 class="font-semibold leading-snug"><a :href="'#/p/' + p.id" class="estirado" x-text="p.nombre"></a></h3>
                   <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(p.precio)"></p>
                 </div>
                 <div class="relative z-10">
-                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(p.id) === 0" @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(p.id) === 0" @click="sumar(p.id, $el)" :aria-label="'Agregar ' + p.nombre + ' al pedido'"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(p.id) > 0" x-cloak :aria-label="'Cantidad de ' + p.nombre">
-                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><i data-lucide="minus"></i></button>
+                    <button type="button" @click="restar(p.id, $el)" :aria-label="'Quitar una unidad de ' + p.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-minus"/></svg></button>
                     <output x-text="$store.pedido.cantidadDe(p.id)" x-pop="$store.pedido.cantidadDe(p.id)"></output>
-                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><i data-lucide="plus"></i></button>
+                    <button type="button" data-mas @click="mas(p.id, $el)" :aria-label="'Agregar otra unidad de ' + p.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   </div>
                 </div>
               </li>
@@ -328,11 +343,11 @@
     <template x-if="$store.ruta.vista === 'producto'">
       <div class="mx-auto max-w-6xl px-4 pb-24 sm:px-6" x-data="detalle">
         <a :href="volverHref" @click="volver($event)" class="enlace inline-flex items-center gap-1.5">
-          <i data-lucide="arrow-left" class="size-4"></i><span x-text="p.categoria === 'regalos' ? 'Regalos' : 'Antojos'"></span>
+          <svg class="icono size-4" width="24" height="24" aria-hidden="true"><use href="#i-arrow-left"/></svg><span x-text="p.categoria === 'regalos' ? 'Regalos' : 'Antojos'"></span>
         </a>
 
         <div class="mt-5 grid gap-8 md:grid-cols-2 md:items-start md:gap-12">
-          <div class="vt-producto mosaico aspect-square" :class="'tono-' + p.tono">
+          <div class="vt-producto mosaico aspect-square" :class="'tono-' + p.tono" x-imagen.ansiosa="p.letras ? null : p">
             <template x-if="p.letras">
               <div class="corazon" aria-hidden="true">
                 <svg viewBox="0 0 100 92" class="corazon-forma" focusable="false">
@@ -352,8 +367,6 @@
                 </div>
               </div>
             </template>
-            <template x-if="!p.letras && p.foto"><img class="foto" :src="p.foto" alt="" decoding="async" @load="$el.classList.add('cargada')" /></template>
-            <template x-if="!p.letras && !p.foto"><img class="ilustracion" :src="p.ilustracion" alt="" width="160" height="160" decoding="async" /></template>
           </div>
 
           <div class="md:pt-4">
@@ -377,12 +390,12 @@
 
             <div class="mt-7 flex flex-wrap items-center gap-3">
               <div class="cantidad" role="group" aria-label="Cantidad">
-                <button type="button" @click="cantidad = Math.max(1, cantidad - 1)" :disabled="cantidad <= 1" aria-label="Una menos"><i data-lucide="minus"></i></button>
+                <button type="button" @click="cantidad = Math.max(1, cantidad - 1)" :disabled="cantidad <= 1" aria-label="Una menos"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-minus"/></svg></button>
                 <output x-text="cantidad" x-pop="cantidad"></output>
-                <button type="button" @click="cantidad = Math.min(99, cantidad + 1)" aria-label="Una más"><i data-lucide="plus"></i></button>
+                <button type="button" @click="cantidad = Math.min(99, cantidad + 1)" aria-label="Una más"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
               </div>
               <button type="button" class="boton boton-cacao grow" @click="agregar($el)" :class="agregado && 'hecho'">
-                <span class="cambio" x-show="!agregado"><i data-lucide="shopping-bag"></i>Agregar al pedido <span class="precio opacity-80" x-text="pesos(p.precio * cantidad)"></span></span>
+                <span class="cambio" x-show="!agregado"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-shopping-bag"/></svg>Agregar al pedido <span class="precio opacity-80" x-text="pesos(p.precio * cantidad)"></span></span>
                 <span class="cambio" x-show="agregado" x-cloak><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" /></svg>Agregado</span>
               </button>
             </div>
@@ -398,17 +411,17 @@
           <ul class="panel mt-6 max-w-3xl p-2 sm:p-3" role="list">
             <template x-for="s in sugeridos" :key="s.id">
               <li class="fila relative" data-fila>
-                <div class="mosaico" :class="'tono-' + s.tono" :data-mosaico="s.id"><img class="ilustracion" :src="s.ilustracion" alt="" width="160" height="160" decoding="async" /></div>
+                <div class="mosaico" :class="'tono-' + s.tono" :data-mosaico="s.id" x-imagen="s"></div>
                 <div class="min-w-0">
                   <h3 class="font-semibold leading-snug"><a :href="'#/p/' + s.id" class="estirado" x-text="s.nombre"></a></h3>
                   <p class="precio mt-0.5 text-coral-tinta" x-text="pesos(s.precio)"></p>
                 </div>
                 <div class="relative z-10">
-                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(s.id) === 0" @click="sumar(s.id, $el)" :aria-label="'Agregar ' + s.nombre + ' al pedido'"><i data-lucide="plus"></i></button>
+                  <button type="button" class="agregar" data-agregar x-show="$store.pedido.cantidadDe(s.id) === 0" @click="sumar(s.id, $el)" :aria-label="'Agregar ' + s.nombre + ' al pedido'"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   <div class="cantidad" role="group" x-show="$store.pedido.cantidadDe(s.id) > 0" x-cloak :aria-label="'Cantidad de ' + s.nombre">
-                    <button type="button" @click="restar(s.id, $el)" :aria-label="'Quitar una unidad de ' + s.nombre"><i data-lucide="minus"></i></button>
+                    <button type="button" @click="restar(s.id, $el)" :aria-label="'Quitar una unidad de ' + s.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-minus"/></svg></button>
                     <output x-text="$store.pedido.cantidadDe(s.id)" x-pop="$store.pedido.cantidadDe(s.id)"></output>
-                    <button type="button" data-mas @click="mas(s.id, $el)" :aria-label="'Agregar otra unidad de ' + s.nombre"><i data-lucide="plus"></i></button>
+                    <button type="button" data-mas @click="mas(s.id, $el)" :aria-label="'Agregar otra unidad de ' + s.nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                   </div>
                 </div>
               </li>
@@ -421,16 +434,16 @@
 
   <!-- ═════════════ Franja de WhatsApp (pie) ═════════════ -->
   <footer class="pie bg-cacao text-nata">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-28 pt-16 sm:px-6 md:grid-cols-[1fr_auto] md:items-center md:pb-16">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-16 sm:px-6 md:grid-cols-[1fr_auto] md:items-center">
       <div>
         <h2 class="font-display text-[clamp(2rem,4.6vw,3rem)] font-bold leading-none">Pedidos por WhatsApp</h2>
         <a :href="$store.pedido.enlaceSaludo" target="_blank" rel="noopener" class="numero mt-4 inline-flex items-center gap-3 font-display text-[clamp(2.2rem,6vw,3.6rem)] font-extrabold leading-none text-durazno">
-          <i data-lucide="message-circle" class="size-[.8em]"></i><span x-text="whatsappVisible">300 750 3552</span>
+          <svg class="icono size-[.8em]" width="24" height="24" aria-hidden="true"><use href="#i-message-circle"/></svg><span x-text="whatsappVisible">300 750 3552</span>
         </a>
         <p class="mt-5 max-w-[46ch] text-nata/75">Escríbenos para pedidos, fechas especiales o cualquier pregunta. Si ya armaste tu pedido aquí, envíalo desde la bolsa.</p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <button type="button" class="boton boton-nata" @click="$store.pedido.abrir()"><i data-lucide="shopping-bag"></i>Ver mi pedido</button>
-          <a href="#/antojos" class="boton boton-borde"><i data-lucide="cookie"></i>Ver los antojos</a>
+          <button type="button" class="boton boton-nata" @click="$store.pedido.abrir()"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-shopping-bag"/></svg>Ver mi pedido</button>
+          <a href="#/antojos" class="boton boton-borde"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-cookie"/></svg>Ver los antojos</a>
         </div>
       </div>
       <figure class="qr max-md:hidden">
@@ -438,7 +451,10 @@
         <figcaption>Escanéalo con la cámara del celular</figcaption>
       </figure>
     </div>
-    <p class="mx-auto max-w-6xl border-t border-nata/10 px-4 py-6 text-sm text-nata/60 sm:px-6">© 2026 Lusof Sweet. Chocolates hechos con amor.</p>
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-nata/10 px-4 pb-28 pt-6 text-sm text-nata/60 sm:px-6 md:pb-6">
+      <p>© <span x-text="new Date().getFullYear()">2026</span> Lusof Sweet. Chocolates hechos con amor.</p>
+      <a href="https://ynt.codes" target="_blank" rel="noopener" class="firma">Hecho por <span>Ynt-labs</span></a>
+    </div>
   </footer>
 
   <!-- ═════════════ Barra de pedido (móvil) ═════════════ -->
@@ -446,36 +462,32 @@
     x-transition:enter="barra-entra" x-transition:enter-start="barra-fuera" x-transition:enter-end="barra-dentro"
     x-transition:leave="barra-sale" x-transition:leave-start="barra-dentro" x-transition:leave-end="barra-fuera">
     <button type="button" data-late @click="$store.pedido.abrir()" class="flex w-full items-center justify-between gap-3 rounded-full bg-cacao px-5 py-3.5 text-nata shadow-[0_18px_40px_-16px_rgb(63_18_6/.9)]">
-      <span class="flex items-center gap-2 font-bold"><i data-lucide="shopping-bag" class="size-5"></i>Tu pedido
+      <span class="flex items-center gap-2 font-bold"><svg class="icono size-5" width="24" height="24" aria-hidden="true"><use href="#i-shopping-bag"/></svg>Tu pedido
         <span class="rounded-full bg-nata/15 px-2 py-0.5 text-sm tabular-nums" x-text="$store.pedido.unidades" x-pop="$store.pedido.unidades"></span></span>
-      <span class="flex items-center gap-1.5"><span class="precio" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span><i data-lucide="chevron-up" class="size-5"></i></span>
+      <span class="flex items-center gap-1.5"><span class="precio" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span><svg class="icono size-5" width="24" height="24" aria-hidden="true"><use href="#i-chevron-up"/></svg></span>
     </button>
   </div>
 
   <!-- ═════════════ Cajón del pedido ═════════════ -->
-  <div class="cajon-fondo" x-show="$store.pedido.abierto" x-cloak @click="$store.pedido.cerrar()"
-    x-transition:enter="desvanece-entra" x-transition:enter-start="transparente" x-transition:enter-end="opaco"
-    x-transition:leave="desvanece-sale" x-transition:leave-start="opaco" x-transition:leave-end="transparente"></div>
-
-  <section class="cajon" role="dialog" aria-modal="true" aria-labelledby="t-pedido"
-    x-show="$store.pedido.abierto" x-cloak
-    x-trap.inert.noscroll="$store.pedido.abierto"
-    @keydown.escape.window="$store.pedido.abierto && $store.pedido.cerrar()"
-    x-transition:enter="cajon-entra" x-transition:enter-start="cajon-fuera" x-transition:enter-end="cajon-dentro"
-    x-transition:leave="cajon-sale" x-transition:leave-start="cajon-dentro" x-transition:leave-end="cajon-fuera">
+  <!-- <dialog> modal: foco atrapado, fondo inerte, Escape y devolución del foco son del
+       navegador. El store manda: abrir/cerrar el store abre/cierra el diálogo, y cerrarlo
+       por Escape o tocando el fondo avisa al store con el evento `close`. -->
+  <dialog class="cajon" aria-labelledby="t-pedido" closedby="any"
+    x-effect="$store.pedido.abierto ? ($el.open || $el.showModal()) : ($el.open && $el.close())"
+    @close="$store.pedido.cerrar()" @click="cerrarSiFuera($event)">
     <div class="cajon-agarre" aria-hidden="true"></div>
     <header class="flex items-center justify-between gap-3 px-5 pb-3 pt-4">
       <h2 id="t-pedido" class="font-display text-[2rem] font-extrabold leading-none">Tu pedido</h2>
-      <button type="button" class="boton-icono hover:bg-arena" @click="$store.pedido.cerrar()" aria-label="Cerrar el pedido"><i data-lucide="x"></i></button>
+      <button type="button" class="boton-icono hover:bg-arena" @click="$store.pedido.cerrar()" aria-label="Cerrar el pedido"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-x"/></svg></button>
     </header>
 
-    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-6">
+    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-cacao/25 scrollbar-track-transparent px-5 pb-6">
       <template x-if="$store.pedido.lineas.length === 0">
         <div class="vacio">
           <img src="assets/img/antojos/fresas.svg" alt="" width="112" height="112" class="size-28" />
           <p class="mt-4 text-lg font-bold">Tu pedido está vacío</p>
           <p class="mt-1 text-cacao-3">Agrega un antojo o una caja de regalo y aparece aquí, con el mensaje listo para WhatsApp.</p>
-          <a href="#/antojos" class="boton boton-cacao mt-6" @click="$store.pedido.cerrar()"><i data-lucide="cookie"></i>Ver los antojos</a>
+          <a href="#/antojos" class="boton boton-cacao mt-6" @click="$store.pedido.cerrar()"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-cookie"/></svg>Ver los antojos</a>
         </div>
       </template>
 
@@ -484,7 +496,7 @@
           <ul class="panel p-1.5" role="list" aria-label="Productos del pedido">
             <template x-for="l in $store.pedido.lineas" :key="l.clave">
               <li class="fila linea-pedido relative" data-fila>
-                <div class="mosaico" :class="'tono-' + $store.pedido.producto(l.id).tono"><img class="ilustracion" :src="$store.pedido.producto(l.id).foto || $store.pedido.producto(l.id).ilustracion" alt="" width="160" height="160" /></div>
+                <div class="mosaico" :class="'tono-' + $store.pedido.producto(l.id).tono" x-imagen="$store.pedido.producto(l.id)"></div>
                 <div class="min-w-0">
                   <p class="font-semibold leading-snug" x-text="$store.pedido.producto(l.id).nombre"></p>
                   <p class="text-sm text-cacao-3" x-show="$store.pedido.producto(l.id).letras">
@@ -494,10 +506,10 @@
                 </div>
                 <div class="cantidad" role="group" :aria-label="'Cantidad de ' + $store.pedido.producto(l.id).nombre">
                   <button type="button" @click="$store.pedido.cambiar(l.clave, -1)" :aria-label="l.cantidad === 1 ? 'Quitar ' + $store.pedido.producto(l.id).nombre + ' del pedido' : 'Quitar una unidad de ' + $store.pedido.producto(l.id).nombre">
-                    <i data-lucide="trash-2" x-show="l.cantidad === 1"></i><i data-lucide="minus" x-show="l.cantidad > 1"></i>
+                    <svg class="icono" width="24" height="24" aria-hidden="true" x-show="l.cantidad === 1"><use href="#i-trash-2"/></svg><svg class="icono" width="24" height="24" aria-hidden="true" x-show="l.cantidad > 1"><use href="#i-minus"/></svg>
                   </button>
                   <output x-text="l.cantidad"></output>
-                  <button type="button" @click="$store.pedido.cambiar(l.clave, 1)" :aria-label="'Agregar otra unidad de ' + $store.pedido.producto(l.id).nombre"><i data-lucide="plus"></i></button>
+                  <button type="button" @click="$store.pedido.cambiar(l.clave, 1)" :aria-label="'Agregar otra unidad de ' + $store.pedido.producto(l.id).nombre"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-plus"/></svg></button>
                 </div>
               </li>
             </template>
@@ -517,18 +529,18 @@
             <div role="radiogroup" aria-labelledby="p-entrega">
               <p id="p-entrega" class="mb-1.5 font-semibold">¿Cómo lo recibes?</p>
               <div class="grid grid-cols-2 gap-2">
-                <label class="opcion"><input type="radio" name="entrega" value="recoger" x-model="$store.pedido.datos.entrega" /><i data-lucide="store" class="size-4"></i>Lo recojo</label>
-                <label class="opcion"><input type="radio" name="entrega" value="domicilio" x-model="$store.pedido.datos.entrega" /><i data-lucide="bike" class="size-4"></i>A domicilio</label>
+                <label class="opcion"><input type="radio" name="entrega" value="recoger" x-model="$store.pedido.datos.entrega" /><svg class="icono size-4" width="24" height="24" aria-hidden="true"><use href="#i-store"/></svg>Lo recojo</label>
+                <label class="opcion"><input type="radio" name="entrega" value="domicilio" x-model="$store.pedido.datos.entrega" /><svg class="icono size-4" width="24" height="24" aria-hidden="true"><use href="#i-bike"/></svg>A domicilio</label>
               </div>
             </div>
-            <div x-show="$store.pedido.datos.entrega === 'domicilio'" x-cloak>
+            <div class="despliega" :class="$store.pedido.datos.entrega !== 'domicilio' && 'plegado'">
               <label for="p-direccion" class="mb-1.5 block font-semibold">Dirección</label>
               <input id="p-direccion" class="campo" x-model="$store.pedido.datos.direccion" autocomplete="street-address" maxlength="160" placeholder="Barrio, calle y número" />
               <p class="mt-1.5 text-sm text-cacao-3">El costo del domicilio lo acordamos por WhatsApp.</p>
             </div>
             <div>
               <label for="p-nota" class="mb-1.5 block font-semibold">Nota</label>
-              <textarea id="p-nota" class="campo min-h-[5.5rem] resize-y" x-model="$store.pedido.datos.nota" maxlength="300" placeholder="Una dedicatoria, una alergia, la adición que quieres…"></textarea>
+              <textarea id="p-nota" class="campo nota resize-y" x-model="$store.pedido.datos.nota" maxlength="300" placeholder="Una dedicatoria, una alergia, la adición que quieres…"></textarea>
             </div>
           </fieldset>
 
@@ -548,7 +560,7 @@
         <span class="precio text-[1.7rem]" x-text="pesos($store.pedido.total)" x-pop="$store.pedido.total"></span>
       </div>
       <a :href="$store.pedido.enlace" target="_blank" rel="noopener" class="boton boton-cacao mt-3 w-full text-[1.05rem]" @click="$store.pedido.marcarEnviado()">
-        <i data-lucide="send"></i>Enviar pedido por WhatsApp
+        <svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-send"/></svg>Enviar pedido por WhatsApp
       </a>
       <p class="enviado mt-3" x-show="$store.pedido.enviado" x-cloak>
         <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" /></svg>
@@ -557,7 +569,7 @@
       <button type="button" class="mt-2 w-full rounded-full py-2 text-sm font-semibold text-cacao-3 hover:text-coral-tinta" @click="$store.pedido.vaciar()"
         x-text="$store.pedido.confirmandoVaciar ? 'Toca otra vez para vaciar el pedido' : 'Vaciar pedido'"></button>
     </footer>
-  </section>
+  </dialog>
 
   <!-- Anuncios para lectores de pantalla -->
   <p class="sr-only" role="status" aria-live="polite" x-text="$store.pedido.anuncio"></p>

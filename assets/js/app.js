@@ -1,7 +1,7 @@
 /* Lusof Sweet — la interacción: rutas, pedido por WhatsApp y movimiento.
  *
- * Sin build: este archivo corre con `defer` DESPUÉS de lucide y catalogo.js y ANTES
- * de Alpine (el orden de los <script> en index.html es parte del contrato).
+ * Sin build: este archivo corre con `defer` DESPUÉS de catalogo.js y ANTES de Alpine
+ * (el orden de los <script> en index.html es parte del contrato).
  *
  *   rutas      #/  #/antojos  #/regalos  #/como-pedir  #/p/<id>
  *   estado     Alpine.store('ruta')  y  Alpine.store('pedido')  (el pedido se guarda en localStorage)
@@ -35,11 +35,6 @@
       .replace(/\s+/g, ' ')
       .replace(/^ /, '')
       .slice(0, MAX_LETRAS);
-
-  // Íconos: Lucide los pinta UNA vez, antes de que Alpine clone nada, incluso los que viven
-  // dentro de <template x-if/x-for>. El <svg> que deja conserva data-lucide, así que volver
-  // a llamar createIcons() los reemplazaría otra vez: no se llama en ningún otro lugar.
-  if (window.lucide) window.lucide.createIcons({ inTemplates: true, attrs: { 'stroke-width': 2.1 } });
 
   // ───────────────────────── Rutas ─────────────────────────
   function leerRuta(hash = location.hash) {
@@ -410,6 +405,14 @@
           if (!mas || !mas.getClientRects().length) fila?.querySelector('[data-agregar]')?.focus();
         });
       },
+      // Toque en el fondo del cajón: el clic llega al <dialog> pero cae fuera de su caja.
+      // Respaldo de `closedby="any"` para los navegadores que aún no lo tienen.
+      cerrarSiFuera(e) {
+        const d = e.currentTarget;
+        if (e.target !== d) return;
+        const r = d.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) this.$store.pedido.cerrar();
+      },
       mas(clave, boton) {
         this.$store.pedido.cambiar(clave, 1);
         const p = porId[clave.split(':')[0]];
@@ -507,6 +510,51 @@
         el.removeEventListener('pointerleave', soltar);
         cancelAnimationFrame(cuadro);
       });
+    });
+
+    // x-imagen="producto": el único lugar que decide qué imagen lleva un mosaico. Con
+    // `foto` en catalogo.js va la foto (entra con fundido al cargar); sin foto, o si la
+    // foto no carga (ruta mal escrita, archivo que falta), va la ilustración. Así una
+    // foto real aparece en TODAS las vistas —lista, detalle, sugeridos, cajón— con
+    // editar una sola línea. `.ansiosa` para la imagen principal (sin carga diferida).
+    // Con null no pone imagen (la caja de corazón dibuja sus letras en su lugar).
+    Alpine.directive('imagen', (el, { expression, modifiers }, { effect, evaluateLater, cleanup }) => {
+      const leer = evaluateLater(expression);
+      const ansiosa = modifiers.includes('ansiosa');
+      let img = null;
+      const ilustrar = (i, p) => {
+        i.className = 'ilustracion';
+        i.width = i.height = 160;
+        i.removeAttribute('loading');
+        i.onload = i.onerror = null;
+        i.src = p.ilustracion;
+      };
+      effect(() =>
+        leer((p) => {
+          if (!p) {
+            img?.remove();
+            img = null;
+            return;
+          }
+          if (!img) {
+            img = document.createElement('img');
+            img.alt = '';
+            img.decoding = 'async';
+            el.prepend(img);
+          }
+          const i = img;
+          if (!p.foto) return ilustrar(i, p);
+          i.className = 'foto';
+          i.removeAttribute('width');
+          i.removeAttribute('height');
+          if (ansiosa) i.fetchPriority = 'high';
+          else i.loading = 'lazy';
+          i.onload = () => i.classList.add('cargada');
+          i.onerror = () => ilustrar(i, p);
+          i.src = p.foto;
+        }),
+      );
+      cleanup(() => img?.remove());
     });
 
     // x-pop="valor": cuando el valor cambia, la cifra entra desde abajo (patrón «number pop-in»).

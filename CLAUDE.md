@@ -8,7 +8,7 @@
 
 El cerebro de este proyecto es [README.md](README.md) — **leelo antes de cualquier cosa**.
 
-Una línea: SPA promocional sin build (Tailwind + Alpine + Lucide por CDN) de Lusof Sweet,
+Una línea: SPA promocional sin build (Tailwind + Alpine por CDN, íconos Lucide en sprite) de Lusof Sweet,
 con pedido armado que sale por WhatsApp; publicada en GitHub Pages como lusof.ynt.codes.
 
 Las tareas de este repo viven en tareas/ (formato: ~/Developer/sigilo/TAREAS.md).
