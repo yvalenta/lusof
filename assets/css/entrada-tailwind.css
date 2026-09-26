@@ -1,0 +1,29 @@
+/* Entrada de Tailwind — se compila con `node scripts/css.mjs` a assets/css/tailwind.css
+   (commiteado, es lo que sirve index.html). No editar tailwind.css a mano: se regenera de
+   este archivo. Ver README.md → «Tailwind (compilado)». */
+/* source(none): sin esto Tailwind escanea el repo entero (tareas/, docs/, mcp/, scripts/,
+   README, llms.txt) buscando clases — cualquier palabra de una tarea que coincida con una
+   utilidad (bg-red-500, sticky…) termina compilada y publicada. Los @source de abajo
+   acotan el escaneo a lo que de verdad sirve index.html: el propio HTML y assets/js. */
+@import "tailwindcss" source(none);
+@source "../../index.html";
+@source "../js";
+
+/* La paleta de la marca, única fuente: muestreada del logo (assets/img/lusof-original.jpeg).
+   `static` publica todas las variables en :root aunque ninguna utilidad las use, porque
+   assets/css/lusof.css también las lee. */
+@theme static {
+  --color-crema: #fbf1ec;       /* fondo: un rubor más claro que el del sello */
+  --color-nata: #fffaf7;        /* superficies */
+  --color-arena: #fae6db;       /* el crema exacto del sello */
+  --color-rubor: #f6d3cb;
+  --color-durazno: #f1b599;     /* el aro del sello */
+  --color-cacao: #3f1206;       /* texto y chocolate */
+  --color-cacao-2: #6b2a12;
+  --color-cacao-3: #8a5a48;     /* texto secundario: 5.2:1 sobre crema */
+  --color-coral: #e0645f;       /* «Sweet» */
+  --color-coral-tinta: #b4463f; /* coral apto para texto: 4.9:1 sobre crema */
+  --color-oro: #d59c42;         /* el filete dorado del sello */
+  --font-display: 'Gluten', 'Figtree', ui-rounded, system-ui, sans-serif;
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+}

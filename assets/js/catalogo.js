@@ -1,6 +1,10 @@
 // Catálogo de Lusof Sweet — fuente: «Flyer Lusof Sweet v3» (claude.ai/design).
 // Precios en pesos colombianos, sin decimales. Para cambiar un precio, un nombre o
-// agregar la foto de un producto, se edita solo este archivo.
+// agregar la foto de un producto, se edita solo este archivo — y después hay que correr
+// `node scripts/catalogo.mjs` para que catalogo.json, llms.txt y el JSON-LD de
+// index.html (que agentes y buscadores leen, no este archivo) queden al día. Si te lo
+// saltás, `node scripts/catalogo.mjs --comprobar` falla en cada push (ver
+// .github/workflows/comprobar.yml).
 //
 //   foto:        ruta relativa a la raíz del sitio (p. ej. 'assets/fotos/torre-eiffel.webp').
 //                Con null se muestra la ilustración. Poner la ruta basta para que la foto
@@ -10,10 +14,26 @@
 //   tono:        fondo del mosaico: crema, rubor, coral u oro (clases .tono-* en lusof.css).
 //   emoji:       solo para textos cortos; no se usa como imagen.
 
-window.LUSOF = {
+globalThis.LUSOF = { // globalThis: el mismo archivo lo leen la web, Node (scripts/) y el Worker (mcp/)
   whatsapp: '573007503552', // +57 300 750 3552, formato wa.me: país + número, sin signos
   whatsappVisible: '300 750 3552',
   marca: 'Lusof Sweet',
+  sitio: 'https://lusof.ynt.codes/',
+
+  // Pago en USDC (decisión de Yonatan, 2026-09-26): solo USDC en Base; el monto en USDC
+  // se acuerda por WhatsApp (los precios siguen en pesos). La dirección es pública.
+  billetera: {
+    direccion: '0x1D4080589539f65Ddb947b0af403f7f7268aEdc2',
+    red: 'Base',
+    chainId: 8453,
+    moneda: 'USDC',
+    contrato: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC nativo de Circle en Base
+    // Va tal cual en las tres puertas que muestran la billetera (el cajón de la web,
+    // ver_catalogo de WebMCP y catalogo.json): nadie debe pagar antes de que Lusof
+    // confirme por WhatsApp el monto y la dirección (decisión de Yonatan, 2026-09-26: si alguien
+    // cambiara la dirección en el camino, se nota ahí), así que nadie la muestra sin este aviso.
+    nota: 'Solo USDC en Base. Antes de pagar, Lusof te confirma por WhatsApp el monto en USDC y la dirección; no pagues sin esa confirmación.',
+  },
 
   productos: [
     {

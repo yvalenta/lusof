@@ -15,26 +15,14 @@
   'use strict';
 
   const L = window.LUSOF;
+  const P = window.LUSOF_PEDIDO; // pedido.js: normalizar, sumar y armar el mensaje (lo comparten web, WebMCP y MCP)
+  const { pesos, normalizarLetras, MAX_CANTIDAD, MAX_TEXTO } = P;
   const productos = L.productos;
-  const porId = Object.fromEntries(productos.map((p) => [p.id, p]));
+  const porId = Object.assign(Object.create(null), Object.fromEntries(productos.map((p) => [p.id, p]))); // sin prototipo: #/p/constructor no es producto
   const menosMovimiento = matchMedia('(prefers-reduced-motion: reduce)');
   const punteroFino = matchMedia('(hover: hover) and (pointer: fine)');
   const GUARDADO = 'lusof-pedido-v1';
-  const MAX_LETRAS = 12;
-  const MAX_CANTIDAD = 99;
   const REBOTE = 'cubic-bezier(.34,1.45,.64,1)';
-
-  // $4.000 — el mismo formato del flyer (es-CO usa punto de miles).
-  const pesos = (n) => '$' + Number(n || 0).toLocaleString('es-CO');
-
-  // Letras de chocolate: mayúsculas, números, ♥ y &; un solo espacio entre palabras.
-  const normalizarLetras = (s) =>
-    String(s || '')
-      .toUpperCase()
-      .replace(/[^A-ZÑÁÉÍÓÚÜ0-9♥& ]/g, '')
-      .replace(/\s+/g, ' ')
-      .replace(/^ /, '')
-      .slice(0, MAX_LETRAS);
 
   // ───────────────────────── Rutas ─────────────────────────
   function leerRuta(hash = location.hash) {
@@ -132,6 +120,7 @@
       transicion = document.startViewTransition(actualizarConNombres); // navegadores sin `types`
     }
     try {
+      transicion.ready.catch(() => {}); // pestaña oculta a mitad de camino: se salta la animación, no es error
       await transicion.finished;
     } catch {
       /* una transición saltada no es un error: el DOM ya cambió */
@@ -239,7 +228,7 @@
 
     Alpine.store('pedido', {
       lineas: [], // { clave, id, cantidad, letras }
-      datos: { nombre: '', cuando: '', entrega: 'recoger', direccion: '', nota: '' },
+      datos: { nombre: '', cuando: '', entrega: 'recoger', direccion: '', pago: 'acordar', nota: '' },
       abierto: false,
       confirmandoVaciar: false,
       enviado: false,
@@ -258,9 +247,10 @@
           }
           if (g && g.datos && typeof g.datos === 'object') {
             for (const k of Object.keys(this.datos)) {
-              if (typeof g.datos[k] === 'string') this.datos[k] = g.datos[k].slice(0, 300);
+              if (typeof g.datos[k] === 'string') this.datos[k] = g.datos[k].slice(0, MAX_TEXTO);
             }
-            if (!['recoger', 'domicilio'].includes(this.datos.entrega)) this.datos.entrega = 'recoger';
+            if (!P.ENTREGAS.includes(this.datos.entrega)) this.datos.entrega = 'recoger';
+            if (!P.PAGOS.includes(this.datos.pago)) this.datos.pago = 'acordar';
           }
         } catch {
           /* sin localStorage (modo privado, bloqueado): el pedido vive solo en esta pestaña */
@@ -345,35 +335,18 @@
         this.confirmandoVaciar = false;
       },
 
+      // El mensaje sale de pedido.js: el mismo texto que arman los agentes (WebMCP y MCP).
+      get armado() {
+        return P.armarPedido(L, { lineas: this.lineas, ...this.datos });
+      },
       get mensaje() {
-        const d = this.datos;
-        const t = (s) => String(s || '').trim();
-        const lineas = this.lineas.map((l) => {
-          const p = porId[l.id];
-          const letras = p.letras ? ` (letras: ${l.letras || 'por definir'})` : '';
-          return `• ${l.cantidad} × ${p.nombre}${letras}: ${pesos(p.precio * l.cantidad)}`;
-        });
-        const entrega = d.entrega === 'domicilio' ? `a domicilio${t(d.direccion) ? ', ' + t(d.direccion) : ''}` : 'lo recojo';
-        return [
-          `¡Hola, ${L.marca}! Quiero hacer este pedido:`,
-          '',
-          ...lineas,
-          '',
-          `Total: ${pesos(this.total)}`,
-          '',
-          t(d.nombre) ? `A nombre de: ${t(d.nombre)}` : null,
-          t(d.cuando) ? `Para: ${t(d.cuando)}` : null,
-          `Entrega: ${entrega}`,
-          t(d.nota) ? `Nota: ${t(d.nota)}` : null,
-        ]
-          .filter((x) => x !== null)
-          .join('\n');
+        return this.armado.mensaje;
       },
       get enlace() {
-        return `https://wa.me/${L.whatsapp}?text=${encodeURIComponent(this.mensaje)}`;
+        return this.armado.enlace;
       },
       get enlaceSaludo() {
-        return `https://wa.me/${L.whatsapp}?text=${encodeURIComponent(`¡Hola, ${L.marca}! Quiero hacer un pedido.`)}`;
+        return P.enlaceWhatsApp(L, `¡Hola, ${L.marca}! Quiero hacer un pedido.`);
       },
       marcarEnviado() {
         this.enviado = true;
@@ -387,9 +360,50 @@
       antojos: productos.filter((p) => p.categoria === 'antojos'),
       regalos: productos.filter((p) => p.categoria === 'regalos'),
       destacados: productos.filter((p) => p.destacado),
+      billetera: L.billetera, // la dirección de pago en USDC/Base: siempre de catalogo.js, nunca a mano en el HTML
+      copiadoBilletera: false,
+      temporizadorBilletera: 0,
       pesos,
       desde(categoria) {
         return Math.min(...productos.filter((p) => p.categoria === categoria).map((p) => p.precio));
+      },
+      // Copia la dirección de la billetera al portapapeles, con respaldo para navegadores
+      // sin Clipboard API (o fuera de un contexto seguro). El botón se desactiva mientras
+      // copia para no disparar dos veces, y el aviso llega a lectores de pantalla por
+      // $store.pedido.anuncio (el mismo cartel `role="status"` del resto del pedido).
+      async copiarBilletera(boton) {
+        const texto = this.billetera.direccion;
+        boton.disabled = true;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(texto);
+          } else {
+            // Respaldo sin Clipboard API (o fuera de un contexto seguro): el botón vive
+            // dentro del cajón, que es un <dialog> modal, y showModal() deja inerte todo
+            // lo de fuera. Un auxiliar en document.body cae ahí: no toma foco ni
+            // selección, así que hay que ponerlo dentro del propio <dialog>.
+            const contenedor = boton.closest('dialog') ?? document.body;
+            const aux = document.createElement('textarea');
+            aux.value = texto;
+            aux.setAttribute('readonly', '');
+            aux.style.position = 'fixed';
+            aux.style.opacity = '0';
+            contenedor.append(aux);
+            aux.focus();
+            aux.select();
+            const copiado = document.execCommand('copy') && document.activeElement === aux;
+            aux.remove();
+            if (!copiado) throw new Error('el respaldo no pudo copiar (el auxiliar no tomó foco ni selección)');
+          }
+          this.copiadoBilletera = true;
+          this.$store.pedido.anuncio = 'Dirección copiada.';
+          clearTimeout(this.temporizadorBilletera);
+          this.temporizadorBilletera = setTimeout(() => (this.copiadoBilletera = false), 2500);
+        } catch {
+          this.$store.pedido.anuncio = 'No se pudo copiar. Selecciona la dirección a mano.';
+        } finally {
+          boton.disabled = false;
+        }
       },
       // Sumar desde una fila o tarjeta y dejar el foco en el control que aparece.
       sumar(id, boton) {
@@ -594,5 +608,28 @@
     );
   });
 
+  // El teclado en celular reduce el visualViewport del cajón: si hay un campo enfocado
+  // ahí dentro, el navegador solo hizo scroll para el alto ANTERIOR (más grande), así que
+  // el campo queda tapado por el pie fijo («Enviar pedido»/«Vaciar pedido»). Se vuelve a
+  // pedir que se muestre cuando el alto disponible cambia.
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      const activo = document.activeElement;
+      const escribe = activo?.tagName === 'TEXTAREA' || (activo?.tagName === 'INPUT' && !['radio', 'checkbox'].includes(activo.type));
+      if (activo?.closest?.('dialog.cajon') && escribe) {
+        activo.scrollIntoView({ block: 'center', behavior: menosMovimiento.matches ? 'auto' : 'smooth' });
+      }
+    });
+  }
+
   window.addEventListener('hashchange', () => cambiarRuta());
+  // Un enlace a la ruta en la que ya estás (p. ej. «Cómo pedir» estando en #/como-pedir) no
+  // dispara hashchange: se atiende igual, para que vuelva a llevarte a la sección.
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest?.('a[href^="#/"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (a.getAttribute('href') !== location.hash) return;
+    e.preventDefault();
+    cambiarRuta();
+  });
 })();

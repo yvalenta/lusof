@@ -1,0 +1,37 @@
+name: comprobar
+
+# Nada de build ni deploy acá: GitHub Pages sirve la raíz de main tal cual (README) con
+# un build "legacy" que no depende de este workflow ni de main protegida — un push que
+# deja catalogo.json/llms.txt/JSON-LD desactualizados, o una prueba rota, igual se
+# publica. Este workflow no lo bloquea: solo lo señala (✗ rojo en el commit) después de
+# que ya salió al aire, para que se note y se corrija con `node scripts/catalogo.mjs`.
+on:
+  push:
+  pull_request:
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Único uso de node_modules en todo el repo: compilar Tailwind (scripts/css.mjs).
+      # El sitio publicado sigue sin build — esto es una herramienta, no una dependencia
+      # de runtime (package.json lo aclara). Versión fija por el lockfile commiteado.
+      - name: instalar la herramienta de build (Tailwind, fijo por package-lock.json)
+        run: npm ci
+      - name: catalogo.json, llms.txt y JSON-LD al día
+        run: node scripts/catalogo.mjs --comprobar
+      - name: assets/css/tailwind.css al día con entrada-tailwind.css
+        run: node scripts/css.mjs --comprobar
+      # `node --test scripts/pruebas/` (el directorio a secas) es lo documentado, pero en
+      # ~/Developer (máquina de Yonatan, Node 22.18.0) revienta con MODULE_NOT_FOUND en
+      # vez de recorrer el directorio — con el mismo contenido copiado a otro lado no
+      # pasa, así que es algo de esa ruta/entorno, no un bug general de Node. El glob
+      # expandido por el shell no lo pisa: mismos archivos, mismas pruebas, sin el lío
+      # (y acá en CI, otra máquina, probablemente ni haría falta).
+      - name: pruebas
+        run: node --test scripts/pruebas/*.test.mjs

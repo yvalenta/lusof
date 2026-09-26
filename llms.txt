@@ -1,0 +1,37 @@
+# Lusof Sweet
+
+> Chocolates hechos con amor: antojos y cajas de regalo hechos a mano, con pedido armado que sale por WhatsApp al 300 750 3552.
+
+## Cómo pedir
+
+Arma el mensaje con las líneas del pedido, el total en pesos, los datos de quien pide y el pago elegido — la misma receta de `armarPedido` en assets/js/pedido.js — y abrí `https://wa.me/573007503552?text=` más el mensaje codificado con `encodeURIComponent`. Ni el sitio ni un agente envían el pedido: la persona lo manda desde WhatsApp.
+
+## Pago
+
+Los precios están en pesos colombianos (COP) y se pagan en efectivo o transferencia. Lusof Sweet también acepta USDC en Base (chainId 8453, contrato `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) a la dirección `0x1D4080589539f65Ddb947b0af403f7f7268aEdc2`. El monto en USDC se acuerda por WhatsApp: no pagues antes de que Lusof te confirme por WhatsApp el monto y la dirección.
+
+## Menú
+
+- [Caja mini de chocolate relleno](https://lusof.ynt.codes/#/p/caja-mini): $4.000 — Una cajita de chocolate con relleno por dentro. Cabe en la mano y alcanza para un antojo.
+- [Pincho de masmelos cubiertos de chocolate](https://lusof.ynt.codes/#/p/pincho-masmelos): $5.000 — Masmelos ensartados en un palito y cubiertos de chocolate.
+- [Chocolatina grande rellena](https://lusof.ynt.codes/#/p/chocolatina-rellena): $5.000 — Una chocolatina de buen tamaño, rellena, para partir y compartir (o no).
+- [Vaso de fresas con avellana](https://lusof.ynt.codes/#/p/vaso-fresas-avellana): $10.000 — Fresas frescas en vaso con crema de avellana.
+- [Vaso de mini donas](https://lusof.ynt.codes/#/p/vaso-mini-donas): $10.000 — Un vaso lleno de mini donas bañadas y decoradas.
+- [Pincho de masmelos en fuente](https://lusof.ynt.codes/#/p/pincho-fuente): $7.000 — Masmelos pasados por la fuente de chocolate, recién bañados.
+- [Torre Eiffel de chocolate](https://lusof.ynt.codes/#/p/torre-eiffel): $7.000 — Una Torre Eiffel de chocolate blanco. Queda bonita en cualquier caja de regalo.
+- [Fresas bañadas en chocolate ×4](https://lusof.ynt.codes/#/p/fresas-x4): $10.000 — Cuatro fresas enteras bañadas en chocolate.
+- [Adiciones](https://lusof.ynt.codes/#/p/adiciones): $2.000 — Un extra para cualquier antojo. Cuéntanos en la nota del pedido cuál quieres.
+- [Caja de corazón con letras](https://lusof.ynt.codes/#/p/caja-corazon): $100.000 — Una caja en forma de corazón con letras de chocolate: un nombre, una fecha o un «TE AMO».
+- [Caja de oso](https://lusof.ynt.codes/#/p/caja-oso): $50.000 — Una caja de regalo con un oso y chocolates, lista para entregar.
+
+## Archivos
+
+- [catalogo.json](catalogo.json): el menú completo, la billetera y la receta del pedido, en JSON.
+
+## Agentes
+
+Herramientas WebMCP en `document.modelContext en https://lusof.ynt.codes/`: ver_catalogo, agregar_al_pedido, cambiar_cantidad, anotar_datos, ver_pedido, abrir_pedido. Un MCP remoto para agentes fuera del navegador todavía no está desplegado.
+
+## Aviso
+
+Las descripciones de cada producto, cuántas letras caben en la caja de corazón, si hay domicilio y cómo se cobra, qué son las adiciones y los medios de pago, todavía los confirma la dueña del negocio. Los precios son los del flyer.

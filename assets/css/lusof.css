@@ -1,12 +1,13 @@
 /* Lusof Sweet — estilos propios.
-   Tailwind (CDN) pone el layout con utilidades en el HTML; acá vive lo que es de la
-   marca: el goteo, los mosaicos, el cajón del pedido y el movimiento.
+   Tailwind (compilado, ver assets/css/entrada-tailwind.css) pone el layout con utilidades
+   en el HTML; acá vive lo que es de la marca: el goteo, los mosaicos, el cajón del pedido
+   y el movimiento.
    Colores muestreados del logo (assets/img/lusof-original.jpeg).
    Movimiento con los tokens de transitions.dev: todo se apaga con «reducir movimiento». */
 
 :root {
-  /* La paleta vive en el @theme de index.html (una sola fuente): acá se usa como
-     var(--color-*) y sus transparencias con color relativo, rgb(from … r g b / α). */
+  /* La paleta vive en el @theme de assets/css/entrada-tailwind.css (una sola fuente): acá
+     se usa como var(--color-*) y sus transparencias con color relativo, rgb(from … r g b / α). */
   --linea: rgb(from var(--color-cacao) r g b / .12);
 
   --r-panel: 1.75rem;
@@ -63,7 +64,10 @@ body { transition: opacity var(--d-corta) linear; }
 /* ───────── Barra superior ───────── */
 .marca img { filter: drop-shadow(0 4px 8px rgb(0 0 0 / .35)); }
 .nav-enlace {
-  position: relative; padding: .5rem .1rem; font-weight: 650;
+  /* Alto de toque ≥44px por padding, no por `display`: un `display` acá pisaría el
+     `display:none` de Tailwind (misma especificidad, lusof.css carga después) y
+     «Cómo pedir» (`.max-md:hidden`) dejaría de esconderse en celular. */
+  position: relative; padding: .7rem .1rem; font-weight: 650;
   color: rgb(from var(--color-nata) r g b / .74);
   transition: color var(--d-rapida);
 }
@@ -259,7 +263,7 @@ html.primera:not(.cargando) .heroe .linea {
 
 .etiqueta-cat {
   position: absolute; left: .7rem; top: .7rem; padding: .2rem .65rem; border-radius: 999px;
-  background: rgb(from var(--color-nata) r g b / .85); color: var(--color-coral-tinta); font-size: .8rem; font-weight: 750;
+  background: rgb(from var(--color-nata) r g b / .85); color: var(--color-coral-tinta); font-size: .875rem; font-weight: 750;
 }
 
 /* Inclinación 3D con reflejo («card tilt» de transitions.dev). El artículo es el marco
@@ -314,7 +318,7 @@ html.primera:not(.cargando) .heroe .linea {
   border-radius: 999px; background: var(--color-nata); box-shadow: inset 0 0 0 1.5px var(--linea);
 }
 .cantidad button {
-  display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; color: var(--color-cacao);
+  display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; color: var(--color-cacao);
   transition: background-color var(--d-rapida), transform var(--d-rapida) var(--salida);
 }
 .cantidad button:hover:not(:disabled) { background: var(--color-arena); }
@@ -390,7 +394,15 @@ html.primera:not(.cargando) .heroe .linea {
 .cajon[open] { display: flex; transform: none; transition-duration: var(--d-lenta); }
 @starting-style { .cajon[open] { transform: translateY(100%); } }
 @media (min-width: 768px) {
-  .cajon { inset: .75rem .75rem .75rem auto; width: min(31rem, calc(100vw - 1.5rem)); max-height: none; border-radius: 1.75rem; transform: translateX(calc(100% + 1rem)); }
+  /* `inset` fija top y bottom acá, pero el <dialog> vive en el top layer y no siempre
+     estira su alto «auto» entre los dos como una caja posicionada normal (confirmado con
+     toques reales: en un celular acostado —min-width:768px con una ventana bajita— el
+     cajón crecía a su alto de CONTENIDO, muy por encima de la pantalla, y como `overflow:
+     hidden` no hay scroll que lo alcance). Un tope explícito, del mismo tamaño que dejarían
+     esos insets (100dvh − 1.5rem), lo resuelve sin depender de ese comportamiento: el
+     `overflow-y-auto` de adentro hace scroll y el pie con «Enviar pedido» queda siempre
+     visible, como en móvil. */
+  .cajon { inset: .75rem .75rem .75rem auto; width: min(31rem, calc(100vw - 1.5rem)); max-height: min(calc(100dvh - 1.5rem), 56rem); border-radius: 1.75rem; transform: translateX(calc(100% + 1rem)); }
   .cajon[open] { transform: none; }
   @starting-style { .cajon[open] { transform: translateX(calc(100% + 1rem)); } }
 }
@@ -406,6 +418,19 @@ html.primera:not(.cargando) .heroe .linea {
 html:has(.cajon[open]) { overflow: hidden; }
 .cajon-agarre { width: 2.75rem; height: .3rem; border-radius: 999px; background: rgb(from var(--color-cacao) r g b / .2); margin: .6rem auto 0; }
 @media (min-width: 768px) { .cajon-agarre { display: none; } }
+
+/* Celular acostado con poca altura (o el teclado abierto): la cabecera fija (72px) y el
+   pie fijo (181px, o 237px con el aviso de «enviado») no hacen scroll y casi no dejan zona
+   para revisar el pedido o llenar los datos. Se compactan las dos y el pie se reduce a solo
+   el botón «Enviar»: el total y el aviso de «enviado» son redundantes acá con el mensaje de
+   WhatsApp que ya se ve completo (con su propio «Total: …») en el cuerpo con scroll. */
+@media (max-height: 30rem) {
+  .cajon header { padding-top: .5rem; padding-bottom: .5rem; }
+  .cajon header h2 { font-size: 1.35rem; }
+  .cajon footer { padding-top: .5rem; padding-bottom: calc(.6rem + env(safe-area-inset-bottom)); }
+  .cajon footer > div, .cajon footer > p.enviado { display: none; }
+  .cajon footer > a { margin-top: 0; }
+}
 
 .vacio { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 3rem 1rem 2rem; }
 
@@ -430,6 +455,16 @@ fieldset { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
 }
 .despliega.plegado { height: 0; opacity: 0; display: none; }
 @starting-style { .despliega:not(.plegado) { height: 0; opacity: 0; } }
+
+/* Dirección de la billetera (USDC/Base): monoespaciada y seleccionable, corta en vez de
+   desbordar (una address no lleva espacios, así que hace falta overflow-wrap + word-break). */
+.direccion-cripto {
+  display: block; width: 100%; padding: .85rem .95rem; border-radius: .95rem;
+  background: var(--color-nata); box-shadow: inset 0 0 0 1.5px var(--linea);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: .92rem; line-height: 1.5; letter-spacing: .01em;
+  overflow-wrap: anywhere; word-break: break-word; user-select: all;
+}
 
 .campo::placeholder { color: rgb(from var(--color-cacao-3) r g b / .8); }
 .campo:focus { outline: none; box-shadow: inset 0 0 0 2px var(--color-coral); }
@@ -484,7 +519,11 @@ html:active-view-transition-type(atras) { --vt-dir: -1; }
 /* lo que no cambia entre vistas se queda quieto: un nombre cada uno (así no viajan con
    la página) y una clase común para quitarles el fundido con una sola regla */
 .vt-barra { view-transition-name: barra; view-transition-class: fijo; }
-.vt-goteo { view-transition-name: goteo; view-transition-class: fijo; }
+/* Puramente decorativo (aria-hidden): sin esto, la CAJA del div (que el navegador estira
+   al alto completo del SVG por el colapso del margen negativo del hijo) tapaba el toque
+   en lo que sigue —el enlace «← Antojos/Regalos» del detalle de producto—, aunque el
+   dibujo mismo (.goteo) ya tenía pointer-events:none. */
+.vt-goteo { view-transition-name: goteo; view-transition-class: fijo; pointer-events: none; }
 .vt-barra-pedido { view-transition-name: barra-pedido; view-transition-class: fijo; }
 ::view-transition-old(*.fijo) { animation: none; opacity: 0; }
 ::view-transition-new(*.fijo) { animation: none; }

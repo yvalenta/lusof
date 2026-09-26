@@ -1,0 +1,204 @@
+{
+  "marca": "Lusof Sweet",
+  "sitio": "https://lusof.ynt.codes/",
+  "whatsapp": "573007503552",
+  "whatsappVisible": "300 750 3552",
+  "moneda": "COP",
+  "generado_de": "assets/js/catalogo.js",
+  "aviso": "Las descripciones de cada producto, cuántas letras caben en la caja de corazón, si hay domicilio y cómo se cobra, qué son las adiciones y los medios de pago, todavía los confirma la dueña del negocio. Los precios son los del flyer.",
+  "billetera": {
+    "direccion": "0x1D4080589539f65Ddb947b0af403f7f7268aEdc2",
+    "red": "Base",
+    "chainId": 8453,
+    "moneda": "USDC",
+    "contrato": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "nota": "Solo USDC en Base. Antes de pagar, Lusof te confirma por WhatsApp el monto en USDC y la dirección; no pagues sin esa confirmación."
+  },
+  "productos": [
+    {
+      "id": "caja-mini",
+      "nombre": "Caja mini de chocolate relleno",
+      "corto": "Caja mini rellena",
+      "precio": 4000,
+      "precioTexto": "$4.000",
+      "categoria": "antojos",
+      "descripcion": "Una cajita de chocolate con relleno por dentro. Cabe en la mano y alcanza para un antojo.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/caja-mini",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/caja-mini.svg"
+    },
+    {
+      "id": "pincho-masmelos",
+      "nombre": "Pincho de masmelos cubiertos de chocolate",
+      "corto": "Pincho de masmelos",
+      "precio": 5000,
+      "precioTexto": "$5.000",
+      "categoria": "antojos",
+      "descripcion": "Masmelos ensartados en un palito y cubiertos de chocolate.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/pincho-masmelos",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/pincho-masmelos.svg"
+    },
+    {
+      "id": "chocolatina-rellena",
+      "nombre": "Chocolatina grande rellena",
+      "corto": "Chocolatina rellena",
+      "precio": 5000,
+      "precioTexto": "$5.000",
+      "categoria": "antojos",
+      "descripcion": "Una chocolatina de buen tamaño, rellena, para partir y compartir (o no).",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/chocolatina-rellena",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/chocolatina.svg"
+    },
+    {
+      "id": "vaso-fresas-avellana",
+      "nombre": "Vaso de fresas con avellana",
+      "corto": "Fresas con avellana",
+      "precio": 10000,
+      "precioTexto": "$10.000",
+      "categoria": "antojos",
+      "descripcion": "Fresas frescas en vaso con crema de avellana.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/vaso-fresas-avellana",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/vaso-fresas.svg"
+    },
+    {
+      "id": "vaso-mini-donas",
+      "nombre": "Vaso de mini donas",
+      "corto": "Mini donas",
+      "precio": 10000,
+      "precioTexto": "$10.000",
+      "categoria": "antojos",
+      "descripcion": "Un vaso lleno de mini donas bañadas y decoradas.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/vaso-mini-donas",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/mini-donas.svg"
+    },
+    {
+      "id": "pincho-fuente",
+      "nombre": "Pincho de masmelos en fuente",
+      "corto": "Masmelos en fuente",
+      "precio": 7000,
+      "precioTexto": "$7.000",
+      "categoria": "antojos",
+      "descripcion": "Masmelos pasados por la fuente de chocolate, recién bañados.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/pincho-fuente",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/pincho-fuente.svg"
+    },
+    {
+      "id": "torre-eiffel",
+      "nombre": "Torre Eiffel de chocolate",
+      "corto": "Torre Eiffel",
+      "precio": 7000,
+      "precioTexto": "$7.000",
+      "categoria": "antojos",
+      "descripcion": "Una Torre Eiffel de chocolate blanco. Queda bonita en cualquier caja de regalo.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/torre-eiffel",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/torre-eiffel.svg"
+    },
+    {
+      "id": "fresas-x4",
+      "nombre": "Fresas bañadas en chocolate ×4",
+      "corto": "Fresas bañadas ×4",
+      "precio": 10000,
+      "precioTexto": "$10.000",
+      "categoria": "antojos",
+      "descripcion": "Cuatro fresas enteras bañadas en chocolate.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/fresas-x4",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/fresas.svg"
+    },
+    {
+      "id": "adiciones",
+      "nombre": "Adiciones",
+      "corto": "Adición",
+      "precio": 2000,
+      "precioTexto": "$2.000",
+      "categoria": "antojos",
+      "descripcion": "Un extra para cualquier antojo. Cuéntanos en la nota del pedido cuál quieres.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/adiciones",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/adiciones.svg"
+    },
+    {
+      "id": "caja-corazon",
+      "nombre": "Caja de corazón con letras",
+      "corto": "Caja de corazón",
+      "precio": 100000,
+      "precioTexto": "$100.000",
+      "categoria": "regalos",
+      "descripcion": "Una caja en forma de corazón con letras de chocolate: un nombre, una fecha o un «TE AMO».",
+      "letras": true,
+      "url": "https://lusof.ynt.codes/#/p/caja-corazon",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/caja-corazon.svg"
+    },
+    {
+      "id": "caja-oso",
+      "nombre": "Caja de oso",
+      "corto": "Caja de oso",
+      "precio": 50000,
+      "precioTexto": "$50.000",
+      "categoria": "regalos",
+      "descripcion": "Una caja de regalo con un oso y chocolates, lista para entregar.",
+      "letras": false,
+      "url": "https://lusof.ynt.codes/#/p/caja-oso",
+      "imagen": "https://lusof.ynt.codes/assets/img/antojos/caja-oso.svg"
+    }
+  ],
+  "pedido": {
+    "reglas": {
+      "maxLetras": 12,
+      "maxCantidad": 99,
+      "maxTexto": 300,
+      "entregas": [
+        "recoger",
+        "domicilio"
+      ],
+      "pagos": [
+        "acordar",
+        "usdc"
+      ]
+    },
+    "enlace": "https://wa.me/<whatsapp>?text=<encodeURIComponent(mensaje)>",
+    "como": "Sumá las líneas del pedido (cantidad × precio), agregá los datos de quien pide y el pago elegido, armá el mensaje (ver armarPedido en assets/js/pedido.js) y abrí el enlace wa.me con ese mensaje codificado con encodeURIComponent. La persona lo envía desde WhatsApp; ni el sitio ni un agente lo mandan.",
+    "ejemplo": {
+      "entrada": {
+        "lineas": [
+          {
+            "id": "torre-eiffel",
+            "cantidad": 1
+          },
+          {
+            "id": "caja-corazon",
+            "cantidad": 1,
+            "letras": "TE AMO"
+          }
+        ],
+        "nombre": "Ana",
+        "cuando": "mañana a las 3 pm",
+        "entrega": "recoger",
+        "pago": "acordar",
+        "nota": ""
+      },
+      "mensaje": "¡Hola, Lusof Sweet! Quiero hacer este pedido:\n\n• 1 × Torre Eiffel de chocolate: $7.000\n• 1 × Caja de corazón con letras (letras: TE AMO): $100.000\n\nTotal: $107.000\n\nA nombre de: Ana\nPara: mañana a las 3 pm\nEntrega: lo recojo\nPago: efectivo o transferencia",
+      "enlace": "https://wa.me/573007503552?text=%C2%A1Hola%2C%20Lusof%20Sweet!%20Quiero%20hacer%20este%20pedido%3A%0A%0A%E2%80%A2%201%20%C3%97%20Torre%20Eiffel%20de%20chocolate%3A%20%247.000%0A%E2%80%A2%201%20%C3%97%20Caja%20de%20coraz%C3%B3n%20con%20letras%20(letras%3A%20TE%20AMO)%3A%20%24100.000%0A%0ATotal%3A%20%24107.000%0A%0AA%20nombre%20de%3A%20Ana%0APara%3A%20ma%C3%B1ana%20a%20las%203%20pm%0AEntrega%3A%20lo%20recojo%0APago%3A%20efectivo%20o%20transferencia"
+    }
+  },
+  "agentes": {
+    "webmcp": {
+      "donde": "document.modelContext en https://lusof.ynt.codes/",
+      "herramientas": [
+        "ver_catalogo",
+        "agregar_al_pedido",
+        "cambiar_cantidad",
+        "anotar_datos",
+        "ver_pedido",
+        "abrir_pedido"
+      ]
+    },
+    "mcp": null
+  }
+}

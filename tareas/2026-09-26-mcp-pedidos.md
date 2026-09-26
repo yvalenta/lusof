@@ -1,5 +1,5 @@
 ---
-estado: en-curso
+estado: hecha
 dueño: sesión
 fecha: 2026-09-26
 tema: que los agentes encuentren a Lusof Sweet y armen pedidos (MCP y descubrimiento por agentes)
@@ -51,3 +51,30 @@ declara acá y arranca en sesión nueva (`/casa tareas/2026-09-26-mcp-pedidos.md
   el login; Yonatan inicia sesión).
 - 2026-09-26: Yonatan decide **A** (la persona envía), alcance **1, 2 y Worker propio**
   (`mcp.lusof.ynt.codes`), y **empujar a `main` si pasa la prueba en local**. En curso.
+- 2026-09-26: Yonatan suma la **billetera de Lusof** `0x1D4080589539f65Ddb947b0af403f7f7268aEdc2`
+  («haz todo para vincular, adiciona a web»). Medido: checksum EIP-55 válido; nonce 0 y sin
+  saldo en Ethereum, Base, Arbitrum, Polygon y Optimism (sin estrenar). Decide: **solo USDC
+  en Base**, el monto en USDC **se acuerda por WhatsApp** (sin tasa en el sitio), y el
+  pedido gana un campo **Pago** (efectivo o transferencia / USDC en Base) que va en el
+  mensaje. Nadie cobra ni verifica pagos en el sitio: sigue siendo A.
+- 2026-09-26: **cerrada.** Hecho y verificado (61/61 pruebas, `catalogo.mjs --comprobar` y
+  `css.mjs --comprobar` en verde; recorrido por toque en Chrome emulado a 360/390/414/844×390
+  y 1280): `pedido.js` como única fuente del mensaje; campo **Pago** y billetera USDC en Base
+  en el cajón y en «Así pides» (copiar dirección; «no pagues todavía: te confirmamos monto y
+  dirección»); `catalogo.json`, `llms.txt` y JSON-LD generados con `--comprobar` en CI;
+  WebMCP (`agentes.js`, API `document.modelContext` del draft CG del 26-sep-2026); MCP remoto
+  en `mcp/` (probado local y `wrangler deploy --dry-run`, **sin desplegar**). Refutado dos
+  veces; lo medio o peor, arreglado. Mismo push: **pase móvil** pedido por Yonatan
+  («optimízalo a mobile») — el goteo tapaba el toque de «← Antojos» (bug en producción,
+  `pointer-events` en `.vt-goteo`), cajón inalcanzable con el celular acostado, campo tapado
+  por el teclado, botones de cantidad y menú bajo 44 px, «Cómo pedir» sin enlace en celular;
+  y **Tailwind compilado** (Yonatan: «compila si la medición lo confirma»; Lighthouse móvil
+  TBT 114→0 ms, JS 143→73 KB, 0 clases perdidas). HTTPS: el certificado de Pages no salía;
+  con GO de Yonatan se quitó y repuso el dominio (2 commits de GitHub al CNAME), salió
+  `approved` y se forzó HTTPS (http → 301) **antes** de publicar la billetera.
+  **Queda para Yonatan:** desplegar el Worker (`mcp/LEEME.md`) y luego poner su URL con
+  `scripts/catalogo.mjs`; pedir el token del origin trial de WebMCP y ponerlo en `index.html`;
+  confirmar con la dueña contenido y medios de pago. **Anotado sin hacer:** en escritorio
+  ≥ ~1500 px las gotas salen cortadas planas (el SVG recorta; ya pasaba antes); enlaces de
+  texto y «Vaciar pedido» bajo 44 px (bajo). Recomendaciones del WhatsApp de pedidos: en
+  `docs/whatsapp-pedidos.md`, **local y fuera de git** por pedido de Yonatan.

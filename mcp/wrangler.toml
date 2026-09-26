@@ -1,0 +1,14 @@
+name = "lusof-mcp"
+main = "worker.mjs"
+compatibility_date = "2026-09-01"
+
+# routes va ANTES de [vars]: en TOML, una vez abierta una tabla ([vars]) toda clave
+# suelta que venga después cae adentro de esa tabla — routes terminaba leído como
+# env.routes (una variable más) en vez de una ruta de verdad. Visto con
+# `wrangler deploy --dry-run`, que lista los bindings resultantes.
+routes = [
+  { pattern = "mcp.lusof.ynt.codes", custom_domain = true }
+]
+
+[vars]
+CATALOGO_URL = "https://lusof.ynt.codes/catalogo.json"

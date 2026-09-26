@@ -1,0 +1,9 @@
+{
+  "name": "lusof-build",
+  "private": true,
+  "description": "Herramienta de build SOLO para compilar Tailwind (scripts/css.mjs). El sitio publicado sigue sin build: no hay dependencias en runtime, este manifiesto no lo carga el navegador. Ver README.md.",
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
+  }
+}
