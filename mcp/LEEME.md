@@ -15,7 +15,7 @@ Nada acá es secreto: el repo es público y GitHub Pages sirve `mcp/` igual que 
   Importa `../assets/js/pedido.js` por su efecto de lado (deja `globalThis.LUSOF_PEDIDO`):
   el pedido se arma con el mismo código que usa la web, no una copia.
 - `wrangler.toml` — nombre, `CATALOGO_URL` (por defecto `catalogo.json` en producción) y
-  la ruta al dominio `mcp.lusof.ynt.codes`.
+  la ruta al dominio `lusof-mcp.ynt.codes`.
 
 El catálogo **siempre se pide en vivo** a `CATALOGO_URL` (con caché corta de borde); si
 la red falla, la herramienta responde con un error claro en vez de servir datos viejos.
@@ -50,7 +50,7 @@ de recorrerlo — ver el comentario de `.github/workflows/comprobar.yml`).
 
 ## Desplegarlo (pasos de Yonatan — nadie más hace esto)
 
-Publicado el 2026-09-28 en <https://mcp.lusof.ynt.codes/mcp> (Worker `lusof-mcp`).
+Publicado el 2026-09-28 en <https://lusof-mcp.ynt.codes/mcp> (Worker `lusof-mcp`).
 **La cuenta de Cloudflare es la de megaplex.med@gmail.com**, la que tiene la zona
 `ynt.codes`; con otra, `wrangler deploy` sube el script pero falla la ruta con «Could not
 find zone for `mcp.lusof.ynt.codes`».
@@ -60,7 +60,7 @@ cd ~/Developer/lusof/mcp
 npx wrangler logout
 npx wrangler login --device --use-keyring --browser=false
 npx wrangler whoami         # debe decir «Megaplex.med@gmail.com's Account»
-npx wrangler deploy         # publica en mcp.lusof.ynt.codes
+npx wrangler deploy         # publica en lusof-mcp.ynt.codes
 ```
 
 - `--device`: el login por `localhost:8976` se cerraba antes de recibir la respuesta, y

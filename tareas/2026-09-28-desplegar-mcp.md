@@ -1,9 +1,9 @@
 ---
-estado: bloqueada
+estado: en-curso
 dueño: yonatan
 fecha: 2026-09-28
-tema: publicar el Worker del MCP en mcp.lusof.ynt.codes y anunciarlo en catalogo.json y llms.txt
-criterio_cierre: POST https://mcp.lusof.ynt.codes/mcp responde initialize y lusof_preparar_pedido da el mismo mensaje y enlace que armarPedido(); catalogo.json trae agentes.mcp con esa URL; GO de Yonatan
+tema: publicar el Worker del MCP en lusof-mcp.ynt.codes y anunciarlo en catalogo.json y llms.txt
+criterio_cierre: POST https://lusof-mcp.ynt.codes/mcp responde initialize y lusof_preparar_pedido da el mismo mensaje y enlace que armarPedido(); catalogo.json trae agentes.mcp con esa URL; GO de Yonatan
 ---
 
 Pedido de Yonatan (2026-09-28): «despliega el worker del MCP también». El Worker nunca había
@@ -37,3 +37,16 @@ salido (`mcp.lusof.ynt.codes` no resolvía; `agentes.mcp: null` a propósito). P
   está listo en la rama local **`anunciar-mcp`** (65/65 pruebas); fusionarlo solo cuando el
   dominio responda. Sigue en la cuenta Yo.valenciat un `lusof-mcp` sin ruta del primer intento:
   borrarlo es decisión de Yonatan.
+- 2026-09-28: Yonatan eligió (a). El dominio pasó a **`lusof-mcp.ynt.codes`** (un nivel, cubierto
+  por `*.ynt.codes`) en `mcp/wrangler.toml`, `MCP_URL` de `scripts/catalogo.mjs`, la prueba,
+  README y LEEME (la cita del error viejo en LEEME queda como estaba); `catalogo.json` y `llms.txt`
+  regenerados; 65/65 pruebas y `--comprobar` al día. `wrangler deploy` (cuenta de megaplex) publicó la
+  versión `feaac317…` y **quitó solo** el custom domain `mcp.lusof` (la API de Workers Domains lista
+  solo `lusof-mcp.ynt.codes`; `mcp.lusof` ya no resuelve). Medido en vivo: el SAN es
+  `ynt.codes, *.ynt.codes`, `initialize` responde y `lusof_preparar_pedido` da **el mismo mensaje,
+  enlace y total** que `armarPedido()` sobre el `catalogo.json` de producción (caja-mini ×2, $8.000).
+  Ojo al medir desde la Mac: un `dig` hecho antes del deploy dejó la respuesta negativa en la caché
+  del sistema y `curl` no resolvía (con `--resolve` al IP de Cloudflare anda). **Falta**: el GO de
+  Yonatan para fusionar `anunciar-mcp` a `main` (sale al aire) y confirmar en producción que
+  `catalogo.json` trae `agentes.mcp` con la URL nueva. Sigue en la cuenta Yo.valenciat el
+  `lusof-mcp` sin ruta del primer intento (borrarlo es decisión de Yonatan).

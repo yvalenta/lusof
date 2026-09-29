@@ -83,7 +83,7 @@ assets/js/catalogo.js             productos, precios y billetera — lo único q
 assets/js/pedido.js               el pedido como dato: reglas, armarPedido() y el mensaje de WhatsApp (una sola fuente)
 assets/js/agentes.js              WebMCP: herramientas para agentes que navegan la página (document.modelContext)
 catalogo.json, llms.txt           para agentes (generados; no editar a mano)
-mcp/                              MCP remoto en un Cloudflare Worker (mcp.lusof.ynt.codes) — ver mcp/LEEME.md
+mcp/                              MCP remoto en un Cloudflare Worker (lusof-mcp.ynt.codes) — ver mcp/LEEME.md
 assets/js/app.js                  rutas por hash, Alpine.store('pedido'), mensaje de WhatsApp, efectos
 scripts/catalogo.mjs              genera catalogo.json, llms.txt y el JSON-LD desde catalogo.js/pedido.js — correr
                                    después de tocar cualquiera de los dos (si no, --comprobar falla en CI)
@@ -166,7 +166,7 @@ Decisiones de Yonatan (2026-09-26; detalle en `tareas/2026-09-26-mcp-pedidos.md`
   `https://lusof.ynt.codes` en <https://developer.chrome.com/origintrials> y va como
   `<meta http-equiv="origin-trial" content="…">`. Sin él, las herramientas no se registran y
   el sitio sigue igual. Probar en local: `chrome://flags/#enable-webmcp-testing`.
-- **El MCP remoto está publicado** desde el 2026-09-28 en <https://mcp.lusof.ynt.codes/mcp>
+- **El MCP remoto está publicado** desde el 2026-09-28 en <https://lusof-mcp.ynt.codes/mcp>
   (cuenta de Cloudflare de megaplex, la que tiene `ynt.codes`; pasos en `mcp/LEEME.md`) y
   `agentes.mcp` lo anuncia vía `scripts/catalogo.mjs`. El Worker empaqueta `pedido.js`: **si
   cambia el mensaje o el enlace, hay que volver a desplegarlo**.

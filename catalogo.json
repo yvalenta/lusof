@@ -200,7 +200,7 @@
       ]
     },
     "mcp": {
-      "url": "https://mcp.lusof.ynt.codes/mcp",
+      "url": "https://lusof-mcp.ynt.codes/mcp",
       "transporte": "Streamable HTTP, JSON-RPC 2.0 por POST",
       "herramientas": [
         "lusof_ver_catalogo",

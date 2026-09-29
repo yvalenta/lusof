@@ -49,7 +49,7 @@ const HERRAMIENTAS_WEBMCP = herramientasWebmcp();
 // MCP remoto: el Worker de mcp/ en su dominio (desplegado el 2026-09-28, ver mcp/LEEME.md).
 // Sus herramientas son los `name: 'lusof_…'` de mcp/worker.mjs, leídos como texto igual que
 // las de WebMCP, para que el anuncio nunca liste una herramienta que el Worker no tiene.
-const MCP_URL = 'https://mcp.lusof.ynt.codes/mcp';
+const MCP_URL = 'https://lusof-mcp.ynt.codes/mcp';
 const HERRAMIENTAS_MCP = [...readFileSync(ruta('mcp/worker.mjs'), 'utf8').matchAll(/\bname:\s*'(lusof_[^']+)'/g)].map((m) => m[1]);
 
 const DESCRIPCION_SITIO =

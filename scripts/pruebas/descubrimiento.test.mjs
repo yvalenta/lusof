@@ -70,7 +70,7 @@ test('catalogo.json: el ejemplo del pedido sale de armarPedido(), no está escri
 });
 
 test('catalogo.json: el MCP anunciado es el dominio del Worker y sus herramientas son las de mcp/worker.mjs', () => {
-  assert.equal(catalogo.agentes.mcp.url, 'https://mcp.lusof.ynt.codes/mcp');
+  assert.equal(catalogo.agentes.mcp.url, 'https://lusof-mcp.ynt.codes/mcp');
   const reales = [...readFileSync(ruta('mcp/worker.mjs'), 'utf8').matchAll(/\bname:\s*'(lusof_[^']+)'/g)].map((m) => m[1]);
   assert.deepEqual(catalogo.agentes.mcp.herramientas, reales);
   assert.deepEqual(reales, ['lusof_ver_catalogo', 'lusof_preparar_pedido']);
