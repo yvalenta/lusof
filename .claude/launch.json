@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8790", "--bind", "127.0.0.1"],
       "port": 8790
+    },
+    {
+      "name": "lusof-mcp",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["wrangler", "dev", "--config", "mcp/wrangler.toml", "--ip", "127.0.0.1", "--port", "8787"],
+      "port": 8787
     }
   ]
 }

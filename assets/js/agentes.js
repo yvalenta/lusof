@@ -10,7 +10,7 @@
  * Las herramientas son una capa fina sobre Alpine.store('pedido') y LUSOF_PEDIDO: arman
  * el pedido con las mismas reglas y el mismo mensaje que la web (nadie reimplementa el
  * mensaje acá; sale siempre de `store.armado`, que llama a P.armarPedido). Ningún agente
- * envía el pedido ni cobra: arma el pedido y el enlace wa.me, y la persona lo manda desde
+ * envía el pedido ni cobra: arma el pedido y el enlace de WhatsApp, y la persona lo manda desde
  * WhatsApp (misma regla del resto del sitio — ver README, «Contratos que no se rompen»).
  *
  * Corre como <script defer> después de catalogo.js, pedido.js y app.js (el orden de

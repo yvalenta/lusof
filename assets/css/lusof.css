@@ -419,7 +419,7 @@ html:has(.cajon[open]) { overflow: hidden; }
 .cajon-agarre { width: 2.75rem; height: .3rem; border-radius: 999px; background: rgb(from var(--color-cacao) r g b / .2); margin: .6rem auto 0; }
 @media (min-width: 768px) { .cajon-agarre { display: none; } }
 /* la zona de arrastre no hace scroll ni zoom: el gesto es solo para bajar la hoja */
-@media (max-width: 767.98px) { .cajon-arrastre { touch-action: none; cursor: grab; } .cajon-agarre { margin-top: 0; padding-top: .6rem; background-clip: content-box; height: calc(.3rem + .6rem); } }
+@media (max-width: 767.98px) { .cajon-arrastre { touch-action: none; padding-top: .6rem; } .cajon-agarre { margin-top: 0; } }
 
 /* Celular acostado con poca altura (o el teclado abierto): la cabecera fija (72px) y el
    pie fijo (181px, o 237px con el aviso de «enviado») no hacen scroll y casi no dejan zona

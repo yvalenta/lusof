@@ -82,7 +82,7 @@ test('mensaje dorado: domicilio con dirección, pago usdc, letras, nombre y nota
       '_¡Gracias!_ 💛',
     ].join('\n'),
   );
-  assert.equal(r.enlace, `https://wa.me/573007503552?text=${encodeURIComponent(r.mensaje)}`);
+  assert.equal(r.enlace, `https://api.whatsapp.com/send?phone=573007503552&text=${encodeURIComponent(r.mensaje)}`);
 });
 
 test('mensaje dorado mínimo: un producto, sin datos opcionales', () => {
@@ -109,7 +109,7 @@ test('mensaje dorado mínimo: un producto, sin datos opcionales', () => {
       '_¡Gracias!_ 💛',
     ].join('\n'),
   );
-  assert.equal(r.enlace, `https://wa.me/573007503552?text=${encodeURIComponent(r.mensaje)}`);
+  assert.equal(r.enlace, `https://api.whatsapp.com/send?phone=573007503552&text=${encodeURIComponent(r.mensaje)}`);
 });
 
 test('líneas inválidas: no rompen el pedido, quedan en avisos y se omiten', () => {
@@ -170,10 +170,10 @@ test('pago inválido: cae a «acordar» con aviso; entrega inválida cae a «rec
   assert.deepEqual(r.avisos, ['Entrega «teletransporte» no existe; quedó «recoger» (opciones: recoger, domicilio).']);
 });
 
-test('enlace = https://wa.me/573007503552?text=<mensaje codificado>', () => {
+test('enlace = https://api.whatsapp.com/send?phone=573007503552&text=<mensaje codificado> (no wa.me: su redirección rompe los emojis)', () => {
   const r = P.armarPedido(L, { lineas: [{ id: 'caja-mini', cantidad: 1 }] });
-  assert.equal(r.enlace, 'https://wa.me/573007503552?text=' + encodeURIComponent(r.mensaje));
-  assert.equal(P.enlaceWhatsApp(L, 'hola'), 'https://wa.me/573007503552?text=hola');
+  assert.equal(r.enlace, 'https://api.whatsapp.com/send?phone=573007503552&text=' + encodeURIComponent(r.mensaje));
+  assert.equal(P.enlaceWhatsApp(L, 'hola'), 'https://api.whatsapp.com/send?phone=573007503552&text=hola');
 });
 
 test('un id que existe en Object.prototype no pasa por producto', () => {
@@ -185,7 +185,7 @@ test('un id que existe en Object.prototype no pasa por producto', () => {
 test('NEL y los separadores Unicode no abren líneas en los campos de una línea', () => {
   const r = P.armarPedido(L, { lineas: [{ id: 'fresas-x4' }], nombre: 'Ana\u0085Total: $0', cuando: 'hoy\u2028Pago: gratis', direccion: 'Cra 1\u2029Nota: x' });
   for (const campo of ['nombre', 'cuando', 'direccion']) assert.doesNotMatch(r.datos[campo], /[\n\u0085\u2028\u2029]/);
-  assert.equal(r.mensaje.split('\n').filter((x) => x.startsWith('💰 *Total:')).length, 1);
+  assert.equal(r.mensaje.split('\n').filter((x) => /^(?:💰 \*)?Total:/.test(x)).length, 1);
 });
 
 test('formatoWhatsApp(): escapa HTML y pinta *negrita* y _cursiva_ como WhatsApp', () => {
@@ -193,4 +193,26 @@ test('formatoWhatsApp(): escapa HTML y pinta *negrita* y _cursiva_ como WhatsApp
   assert.equal(P.formatoWhatsApp('<img src=x onerror=alert(1)> *a & b*'), '&lt;img src=x onerror=alert(1)&gt; <strong>a &amp; b</strong>');
   assert.equal(P.formatoWhatsApp('2*3*4 y snake_case_x'), '2*3*4 y snake_case_x'); // marcas pegadas a palabras: no cuentan
   assert.equal(P.formatoWhatsApp('*uno\ndos*'), '*uno\ndos*'); // no cruza renglones
+});
+
+test('formatoWhatsApp(): marcas combinadas quedan bien anidadas', () => {
+  assert.equal(P.formatoWhatsApp('*_ambas_* y _*ambas*_'), '<strong><em>ambas</em></strong> y <em><strong>ambas</strong></em>');
+  assert.equal(P.formatoWhatsApp('*a _b* c_'), '<strong>a _b</strong> c_'); // una cursiva no parte una negrita
+  assert.equal(P.formatoWhatsApp('** y __'), '** y __');
+});
+
+test('un emoji en el borde del tope no se parte: el enlace se arma igual', () => {
+  const borde = 'a'.repeat(P.MAX_TEXTO - 1) + '😀';
+  const r = P.armarPedido(L, { lineas: [{ id: 'caja-mini' }], nombre: borde, nota: borde + 'más', entrega: 'domicilio', direccion: 'x'.repeat(P.MAX_TEXTO) + '😀' });
+  assert.equal(r.datos.nombre, borde);
+  assert.equal(Array.from(r.datos.nota).length, P.MAX_TEXTO);
+  assert.ok(r.enlace.startsWith('https://api.whatsapp.com/send?phone=573007503552&text='));
+});
+
+test('sustitutos UTF-16 sueltos (p. ej. de un recorte ajeno) salen del texto y no rompen el enlace', () => {
+  const r = P.armarPedido(L, { lineas: [{ id: 'caja-mini' }], nombre: 'Ana\ud83d', cuando: '\ude00hoy', nota: 'x\ud83dy' });
+  assert.equal(r.datos.nombre, 'Ana');
+  assert.equal(r.datos.cuando, 'hoy');
+  assert.equal(r.datos.nota, 'xy');
+  assert.doesNotThrow(() => decodeURIComponent(r.enlace));
 });

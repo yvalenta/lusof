@@ -5,7 +5,7 @@
  *
  *   rutas      #/  #/antojos  #/regalos  #/como-pedir  #/p/<id>
  *   estado     Alpine.store('ruta')  y  Alpine.store('pedido')  (el pedido se guarda en localStorage)
- *   salida     un enlace https://wa.me/573007503552?text=… con el mensaje armado
+ *   salida     un enlace https://api.whatsapp.com/send?phone=573007503552&text=… con el mensaje armado
  *
  * Movimiento (tokens de transitions.dev): salida cubic-bezier(.22,1,.36,1), rebote
  * cubic-bezier(.34,1.45,.64,1). Con «reducir movimiento» se quita todo lo decorativo
@@ -432,20 +432,21 @@
       // al dedo y, pasado un umbral o con un tirón rápido, se cierra; si no, vuelve a su sitio.
       arrastre: null,
       arrastreInicio(e) {
-        if (e.pointerType === 'mouse' || innerWidth >= 768 || e.target.closest('button')) return;
-        this.arrastre = { y: e.clientY, t: e.timeStamp, dy: 0, cajon: e.currentTarget.closest('dialog') };
+        // un segundo dedo no reinicia ni corta el gesto del primero
+        if (this.arrastre || e.pointerType === 'mouse' || innerWidth >= 768 || e.target.closest('button')) return;
+        this.arrastre = { id: e.pointerId, y: e.clientY, t: e.timeStamp, dy: 0, cajon: e.currentTarget.closest('dialog') };
         try { e.currentTarget.setPointerCapture(e.pointerId); } catch {} // el dedo puede salir de la zona sin perder el gesto
         this.arrastre.cajon.style.transition = 'none';
       },
       arrastreMueve(e) {
         const a = this.arrastre;
-        if (!a) return;
+        if (!a || e.pointerId !== a.id) return;
         a.dy = Math.max(0, e.clientY - a.y);
         a.cajon.style.transform = `translateY(${a.dy}px)`;
       },
       arrastreFin(e) {
         const a = this.arrastre;
-        if (!a) return;
+        if (!a || e.pointerId !== a.id) return;
         this.arrastre = null;
         const rapido = a.dy / Math.max(1, e.timeStamp - a.t) > 0.5; // px/ms
         a.cajon.style.transition = '';

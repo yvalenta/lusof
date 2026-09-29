@@ -51,7 +51,7 @@ function proyectarCatalogoDesdeLusof() {
     productos,
     pedido: {
       reglas: { maxLetras: P.MAX_LETRAS, maxCantidad: P.MAX_CANTIDAD, maxTexto: P.MAX_TEXTO, entregas: P.ENTREGAS, pagos: P.PAGOS },
-      enlace: 'https://wa.me/<whatsapp>?text=<encodeURIComponent(mensaje)>',
+      enlace: 'https://api.whatsapp.com/send?phone=<whatsapp>&text=<encodeURIComponent(mensaje)>',
       como: 'Elegí productos y cantidades, sumalos con armarPedido() y abrí el enlace de WhatsApp para mandarlo vos mismo/a.',
       ejemplo: { entrada: entradaEjemplo, mensaje: ejemplo.mensaje, enlace: ejemplo.enlace },
     },

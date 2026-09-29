@@ -124,8 +124,11 @@ docs/                             investigación de base (Resplandor, transition
 - **Rutas**: `#/`, `#/antojos`, `#/regalos`, `#/como-pedir`, `#/p/<id>`. Cada cambio pasa
   por `document.startViewTransition` y espera `Alpine.nextTick()` antes de la foto nueva;
   el mosaico del producto viaja entre lista y detalle (`view-transition-name: producto`).
-- **WhatsApp**: `https://wa.me/573007503552?text=…` con `encodeURIComponent`. El sitio
-  nunca envía nada: abre WhatsApp con el mensaje listo y la persona lo manda.
+- **WhatsApp**: `https://api.whatsapp.com/send?phone=573007503552&text=…` con
+  `encodeURIComponent` — **nunca `wa.me`**: su redirección cambia cada emoji (y el ♥ de las
+  letras) por «�» (medido con curl el 2026-09-26 y el 2026-09-28). El mensaje usa el formato
+  de WhatsApp (`*negrita*`, `_cursiva_`) y la burbuja lo pinta igual con `formatoWhatsApp()`.
+  El sitio nunca envía nada: abre WhatsApp con el mensaje listo y la persona lo manda.
 - **El CSS carga en dos hojas, en este orden**: `assets/css/tailwind.css` (utilidades)
   y después `assets/css/lusof.css` (marca) — un mismo selector definido en ambas gana
   `lusof.css`. Ojo con declarar ahí una propiedad que una utilidad de Tailwind también
@@ -151,7 +154,7 @@ docs/                             investigación de base (Resplandor, transition
 Decisiones de Yonatan (2026-09-26; detalle en `tareas/2026-09-26-mcp-pedidos.md`):
 
 - **Nadie envía ni cobra por la persona.** Web, WebMCP y MCP arman el mismo pedido con
-  `armarPedido()` de `pedido.js` y devuelven el enlace `wa.me`; la persona lo manda.
+  `armarPedido()` de `pedido.js` y devuelven el enlace de WhatsApp; la persona lo manda.
 - **Tres puertas para agentes**: `catalogo.json` + `llms.txt` + JSON-LD schema.org (estático,
   generado por `scripts/catalogo.mjs`); WebMCP en `assets/js/agentes.js` (6 herramientas
   sobre el mismo `Alpine.store('pedido')`); y el MCP remoto de `mcp/` (Streamable HTTP, sin

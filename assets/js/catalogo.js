@@ -15,7 +15,7 @@
 //   emoji:       solo para textos cortos; no se usa como imagen.
 
 globalThis.LUSOF = { // globalThis: el mismo archivo lo leen la web, Node (scripts/) y el Worker (mcp/)
-  whatsapp: '573007503552', // +57 300 750 3552, formato wa.me: país + número, sin signos
+  whatsapp: '573007503552', // +57 300 750 3552, país + número, sin signos (como lo pide el enlace de WhatsApp)
   whatsappVisible: '300 750 3552',
   marca: 'Lusof Sweet',
   sitio: 'https://lusof.ynt.codes/',

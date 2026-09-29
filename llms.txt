@@ -4,7 +4,7 @@
 
 ## Cómo pedir
 
-Arma el mensaje con las líneas del pedido, el total en pesos, los datos de quien pide y el pago elegido — la misma receta de `armarPedido` en assets/js/pedido.js — y abrí `https://wa.me/573007503552?text=` más el mensaje codificado con `encodeURIComponent`. Ni el sitio ni un agente envían el pedido: la persona lo manda desde WhatsApp.
+Arma el mensaje con las líneas del pedido, el total en pesos, los datos de quien pide y el pago elegido — la misma receta de `armarPedido` en assets/js/pedido.js — y abrí `https://api.whatsapp.com/send?phone=573007503552&text=` más el mensaje codificado con `encodeURIComponent`. Ni el sitio ni un agente envían el pedido: la persona lo manda desde WhatsApp.
 
 ## Pago
 

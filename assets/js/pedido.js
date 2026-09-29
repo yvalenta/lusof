@@ -31,12 +31,18 @@
       .replace(/^ /, '')
       .slice(0, MAX_LETRAS);
 
+  // Sin sustitutos UTF-16 sueltos (encodeURIComponent lanza con ellos) y recortado por puntos
+  // de código, no por unidades: un emoji en el borde del tope no queda partido a la mitad.
+  const sinSueltos = (s) => s.replace(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/g, '');
+  const recortar = (s) => Array.from(s).slice(0, MAX_TEXTO).join('');
   // Campos de una línea (nombre, cuándo, dirección): sin saltos que imiten otra línea del mensaje.
-  const unaLinea = (s) => String(s ?? '').replace(/[\u0000-\u001f\u007f\u0085\u2028\u2029]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, MAX_TEXTO);
+  const unaLinea = (s) => recortar(sinSueltos(String(s ?? '')).replace(/[\u0000-\u001f\u007f\u0085\u2028\u2029]+/g, ' ').replace(/\s+/g, ' ').trim());
   // La nota admite saltos de línea; lo demás de control sale (NEL y los separadores Unicode pasan a \n).
-  const nota = (s) => String(s ?? '').replace(/\r\n?|[\u0085\u2028\u2029]/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, '').trim().slice(0, MAX_TEXTO);
+  const nota = (s) => recortar(sinSueltos(String(s ?? '')).replace(/\r\n?|[\u0085\u2028\u2029]/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, '').trim());
 
-  const enlaceWhatsApp = (catalogo, texto) => `https://wa.me/${catalogo.whatsapp}?text=${encodeURIComponent(texto)}`;
+  // api.whatsapp.com/send y no wa.me: la redirección de wa.me cambia cada emoji (y el ♥ de las
+  // letras) por «�» — medido con curl el 2026-09-26 y el 2026-09-28; ver docs/investigacion-2026-09-26.md.
+  const enlaceWhatsApp = (catalogo, texto) => `https://api.whatsapp.com/send?phone=${catalogo.whatsapp}&text=${encodeURIComponent(texto)}`;
 
   /* entrada: { lineas: [{ id, cantidad, letras }], nombre, cuando, entrega, direccion, pago, nota }
    * devuelve: { lineas, unidades, total, mensaje, enlace, avisos }
@@ -140,11 +146,14 @@
    * renglones). Escapar antes es lo que hace seguro usarlo con x-html aunque el texto
    * traiga lo que escribió la persona. */
   const escaparHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const marca = (m) => new RegExp(`(^|[\\s(¡¿])\\${m}(\\S(?:[^${m}\\n]*?\\S)?)\\${m}(?=$|[\\s.,:;!?)])`, 'gm');
+  // Primero la negrita (sobre texto ya escapado, sin etiquetas); la cursiva puede envolver una
+  // negrita completa pero nunca media, así el HTML queda siempre bien anidado: *_a_*, _*a*_.
+  const NEGRITA = /(^|[\s(¡¿_])\*(?=\S)([^*\n]+?)(?<=\S)\*(?=$|[\s.,:;!?)_])/gm;
+  const CURSIVA = /(^|[\s(¡¿>])_(?=\S)((?:[^_\n<>]|<strong>[^<]*<\/strong>)+?)(?<=\S)_(?=$|[\s.,:;!?)<])/gm;
   const formatoWhatsApp = (texto) =>
     escaparHTML(texto)
-      .replace(marca('*'), '$1<strong>$2</strong>')
-      .replace(marca('_'), '$1<em>$2</em>');
+      .replace(NEGRITA, '$1<strong>$2</strong>')
+      .replace(CURSIVA, '$1<em>$2</em>');
 
   globalThis.LUSOF_PEDIDO = { MAX_LETRAS, MAX_CANTIDAD, MAX_TEXTO, ENTREGAS, PAGOS, pesos, normalizarLetras, enlaceWhatsApp, formatoWhatsApp, armarPedido };
 })();

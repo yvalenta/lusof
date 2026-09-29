@@ -116,10 +116,10 @@ function construirCatalogo() {
         pagos: P.PAGOS,
       },
       // Receta general, no atada a un pedido: la misma fórmula de LUSOF_PEDIDO.enlaceWhatsApp.
-      enlace: 'https://wa.me/<whatsapp>?text=<encodeURIComponent(mensaje)>',
+      enlace: 'https://api.whatsapp.com/send?phone=<whatsapp>&text=<encodeURIComponent(mensaje)>',
       como:
         'Sumá las líneas del pedido (cantidad × precio), agregá los datos de quien pide y el pago elegido, ' +
-        'armá el mensaje (ver armarPedido en assets/js/pedido.js) y abrí el enlace wa.me con ese mensaje ' +
+        'armá el mensaje (ver armarPedido en assets/js/pedido.js) y abrí el enlace de api.whatsapp.com/send con ese mensaje ' +
         'codificado con encodeURIComponent. La persona lo envía desde WhatsApp; ni el sitio ni un agente lo mandan.',
       ejemplo: { entrada: ENTRADA_EJEMPLO, mensaje: armado.mensaje, enlace: armado.enlace },
     },
@@ -142,7 +142,7 @@ function construirLlmsTxt(catalogo) {
     '## Cómo pedir',
     '',
     `Arma el mensaje con las líneas del pedido, el total en pesos, los datos de quien pide y el pago elegido — ` +
-      `la misma receta de \`armarPedido\` en assets/js/pedido.js — y abrí \`https://wa.me/${catalogo.whatsapp}?text=\` ` +
+      `la misma receta de \`armarPedido\` en assets/js/pedido.js — y abrí \`https://api.whatsapp.com/send?phone=${catalogo.whatsapp}&text=\` ` +
       'más el mensaje codificado con `encodeURIComponent`. Ni el sitio ni un agente envían el pedido: la persona ' +
       'lo manda desde WhatsApp.',
     '',
