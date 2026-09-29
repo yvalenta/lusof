@@ -59,3 +59,9 @@ salido (`mcp.lusof.ynt.codes` no resolvía; `agentes.mcp: null` a propósito). P
   (60439750…): antes de borrar, la API mostró el script (200) sin dominios; después, 404. El de
   producción (megaplex) sigue respondiendo `ping`. Wrangler quedó con la sesión de Yo.valenciat:
   para redesplegar, volver a iniciar sesión con megaplex (`mcp/LEEME.md`).
+- 2026-09-29: Yonatan consideró `https://lusof.ynt.codes/mcp` y **decidió quedarse con
+  `lusof-mcp.ynt.codes`**. Por qué: `/mcp` en el mismo host exige poner `lusof` con proxy (nube
+  naranja) delante de GitHub Pages — depende del modo SSL de la zona (Full, no Flexible; wrangler no
+  tiene permiso para leerlo: 9109) y arriesga la renovación del certificado de Pages. En el panel
+  (Edge Certificates), `lusof-mcp.ynt.codes` tiene certificado *Advanced* propio, activo y
+  administrado (vence 2026-12-27, se renueva solo). Wrangler quedó otra vez con megaplex.
