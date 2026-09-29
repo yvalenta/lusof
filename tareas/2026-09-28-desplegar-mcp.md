@@ -55,3 +55,7 @@ salido (`mcp.lusof.ynt.codes` no resolvía; `agentes.mcp: null` a propósito). P
   `https://lusof.ynt.codes/catalogo.json` trae `agentes.mcp.url = https://lusof-mcp.ynt.codes/mcp`
   y `llms.txt` la anuncia. Criterio de cierre cumplido. **Hecha.** Queda fuera de esta tarea, a
   decisión de Yonatan: el `lusof-mcp` sin ruta en la cuenta Yo.valenciat.
+- 2026-09-29: a pedido de Yonatan, borrado el `lusof-mcp` sin ruta de la cuenta Yo.valenciat
+  (60439750…): antes de borrar, la API mostró el script (200) sin dominios; después, 404. El de
+  producción (megaplex) sigue respondiendo `ping`. Wrangler quedó con la sesión de Yo.valenciat:
+  para redesplegar, volver a iniciar sesión con megaplex (`mcp/LEEME.md`).
