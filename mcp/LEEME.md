@@ -50,18 +50,29 @@ de recorrerlo — ver el comentario de `.github/workflows/comprobar.yml`).
 
 ## Desplegarlo (pasos de Yonatan — nadie más hace esto)
 
+Publicado el 2026-09-28 en <https://mcp.lusof.ynt.codes/mcp> (Worker `lusof-mcp`).
+**La cuenta de Cloudflare es la de megaplex.med@gmail.com**, la que tiene la zona
+`ynt.codes`; con otra, `wrangler deploy` sube el script pero falla la ruta con «Could not
+find zone for `mcp.lusof.ynt.codes`».
+
 ```bash
 cd ~/Developer/lusof/mcp
-npx wrangler login          # una vez, por navegador
+npx wrangler logout
+npx wrangler login --device --use-keyring --browser=false
+npx wrangler whoami         # debe decir «Megaplex.med@gmail.com's Account»
 npx wrangler deploy         # publica en mcp.lusof.ynt.codes
 ```
 
-Después de desplegar:
+- `--device`: el login por `localhost:8976` se cerraba antes de recibir la respuesta, y
+  wrangler solo escucha en `[::1]` (IPv6).
+- `--browser=false` + aprobar el código en una **ventana privada** entrando con la cuenta de
+  megaplex: si no, el navegador aprueba con la sesión de Cloudflare que ya tenga abierta.
+- `--use-keyring`: la credencial queda cifrada con la llave en el llavero de macOS, no en
+  texto plano.
+- El dominio nuevo tarda unos minutos en tener certificado TLS: mientras tanto el handshake
+  se corta (ECONNRESET), no es el Worker.
 
-1. Poner la URL real (`https://mcp.lusof.ynt.codes/mcp`) en `agentes.mcp` de
-   `catalogo.json`, vía `scripts/catalogo.mjs` (no a mano: es el generador el que
-   escribe ese archivo).
-2. Sumarla a `llms.txt` en la raíz del sitio.
-
-Hasta que eso pase, `catalogo.json` trae `agentes.mcp: null` a propósito — mejor no
-anunciar un endpoint que todavía no existe.
+`catalogo.json` (`agentes.mcp`) y `llms.txt` anuncian la URL; los escribe
+`scripts/catalogo.mjs`, que toma las herramientas de los `name: 'lusof_…'` de `worker.mjs`.
+Como `worker.mjs` empaqueta `../assets/js/pedido.js`, **un cambio del mensaje o del enlace
+exige volver a desplegar el Worker**; si no, el MCP arma el pedido viejo.

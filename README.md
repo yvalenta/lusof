@@ -166,8 +166,10 @@ Decisiones de Yonatan (2026-09-26; detalle en `tareas/2026-09-26-mcp-pedidos.md`
   `https://lusof.ynt.codes` en <https://developer.chrome.com/origintrials> y va como
   `<meta http-equiv="origin-trial" content="…">`. Sin él, las herramientas no se registran y
   el sitio sigue igual. Probar en local: `chrome://flags/#enable-webmcp-testing`.
-- **El MCP remoto no está desplegado**: lo despliega Yonatan (`mcp/LEEME.md`) y después su URL
-  va a `agentes.mcp` vía `scripts/catalogo.mjs`. Hasta entonces `catalogo.json` dice `null`.
+- **El MCP remoto está publicado** desde el 2026-09-28 en <https://mcp.lusof.ynt.codes/mcp>
+  (cuenta de Cloudflare de megaplex, la que tiene `ynt.codes`; pasos en `mcp/LEEME.md`) y
+  `agentes.mcp` lo anuncia vía `scripts/catalogo.mjs`. El Worker empaqueta `pedido.js`: **si
+  cambia el mensaje o el enlace, hay que volver a desplegarlo**.
 - **Billetera**: `LUSOF.billetera` en `catalogo.js` es la única fuente (dirección, red Base,
   chainId 8453, contrato USDC). Solo USDC en Base; los precios siguen en pesos y **Lusof
   confirma por WhatsApp el monto en USDC y la dirección antes de que la persona pague**

@@ -30,7 +30,7 @@ Los precios están en pesos colombianos (COP) y se pagan en efectivo o transfere
 
 ## Agentes
 
-Herramientas WebMCP en `document.modelContext en https://lusof.ynt.codes/`: ver_catalogo, agregar_al_pedido, cambiar_cantidad, anotar_datos, ver_pedido, abrir_pedido. Un MCP remoto para agentes fuera del navegador todavía no está desplegado.
+Herramientas WebMCP en `document.modelContext en https://lusof.ynt.codes/`: ver_catalogo, agregar_al_pedido, cambiar_cantidad, anotar_datos, ver_pedido, abrir_pedido. MCP remoto para agentes fuera del navegador en `https://mcp.lusof.ynt.codes/mcp` (Streamable HTTP, JSON-RPC 2.0 por POST): lusof_ver_catalogo, lusof_preparar_pedido. Solo lectura: arma el pedido y su enlace de WhatsApp; nunca lo envía ni cobra.
 
 ## Aviso
 

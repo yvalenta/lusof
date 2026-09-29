@@ -69,8 +69,11 @@ test('catalogo.json: el ejemplo del pedido sale de armarPedido(), no está escri
   assert.equal(catalogo.pedido.ejemplo.enlace, armado.enlace);
 });
 
-test('catalogo.json: no anuncia un endpoint MCP que no existe', () => {
-  assert.equal(catalogo.agentes.mcp, null);
+test('catalogo.json: el MCP anunciado es el dominio del Worker y sus herramientas son las de mcp/worker.mjs', () => {
+  assert.equal(catalogo.agentes.mcp.url, 'https://mcp.lusof.ynt.codes/mcp');
+  const reales = [...readFileSync(ruta('mcp/worker.mjs'), 'utf8').matchAll(/\bname:\s*'(lusof_[^']+)'/g)].map((m) => m[1]);
+  assert.deepEqual(catalogo.agentes.mcp.herramientas, reales);
+  assert.deepEqual(reales, ['lusof_ver_catalogo', 'lusof_preparar_pedido']);
 });
 
 test('catalogo.json: las herramientas WebMCP son las que de verdad registra agentes.js', () => {

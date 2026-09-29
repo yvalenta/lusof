@@ -199,6 +199,13 @@
         "abrir_pedido"
       ]
     },
-    "mcp": null
+    "mcp": {
+      "url": "https://mcp.lusof.ynt.codes/mcp",
+      "transporte": "Streamable HTTP, JSON-RPC 2.0 por POST",
+      "herramientas": [
+        "lusof_ver_catalogo",
+        "lusof_preparar_pedido"
+      ]
+    }
   }
 }
