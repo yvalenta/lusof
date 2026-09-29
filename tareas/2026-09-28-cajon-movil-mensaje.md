@@ -1,5 +1,5 @@
 ---
-estado: en-curso
+estado: hecha
 dueño: sesión
 fecha: 2026-09-28
 tema: cajón del pedido — mensaje de WhatsApp con negrita, cursiva y emojis; interacción móvil (deslizar para cerrar, teclado, toques)
@@ -55,3 +55,8 @@ finalizar la compra»; «el texto debería ser más dinámico con negrita, cursi
   contra el catálogo de producción da el mismo mensaje y enlace que la web. Falta la sesión de
   Cloudflare: `wrangler login` se cerró sin levantar el callback en :8976 (visto en su
   terminal); paso de Yonatan con `--device`.
+- 2026-09-28: hecha. Yonatan dio el GO para publicar el arreglo («go push»). Empujado `95aeba8`;
+  Pages lo sirvió a los ~25 s (9 archivos idénticos al commit). En producción el botón «Enviar»
+  abre `api.whatsapp.com/send` con 🍫 🛍️ 💰 🏪 💵 💛 en el `text` y 0 `�`. Queda para Yonatan
+  mirarlo en su celular (el panel no trae fuente de emojis ni probé el gesto con un dedo real).
+  El despliegue del Worker sigue en `tareas/2026-09-28-desplegar-mcp.md`.
