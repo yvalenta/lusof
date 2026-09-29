@@ -669,11 +669,14 @@
   <dialog class="cajon" aria-labelledby="t-pedido" closedby="any"
     x-effect="$store.pedido.abierto ? ($el.open || $el.showModal()) : ($el.open && $el.close())"
     @close="$store.pedido.cerrar()" @click="cerrarSiFuera($event)">
+    <!-- En móvil, arrastrar el agarre o la cabecera hacia abajo cierra el cajón (como una hoja nativa). -->
+    <div class="cajon-arrastre" @pointerdown="arrastreInicio($event)" @pointermove="arrastreMueve($event)" @pointerup="arrastreFin($event)" @pointercancel="arrastreFin($event)">
     <div class="cajon-agarre" aria-hidden="true"></div>
     <header class="flex items-center justify-between gap-3 px-5 pb-3 pt-4">
       <h2 id="t-pedido" class="font-display text-[2rem] font-extrabold leading-none">Tu pedido</h2>
       <button type="button" class="boton-icono hover:bg-arena" @click="$store.pedido.cerrar()" aria-label="Cerrar el pedido"><svg class="icono" width="24" height="24" aria-hidden="true"><use href="#i-x"/></svg></button>
     </header>
+    </div>
 
     <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-cacao/25 scrollbar-track-transparent px-5 pb-6">
       <template x-if="$store.pedido.lineas.length === 0">
@@ -714,11 +717,11 @@
             <p class="!mt-1 text-sm text-cacao-3">Todo es opcional: lo que escribas va en el mensaje.</p>
             <div>
               <label for="p-nombre" class="mb-1.5 block font-semibold">Nombre</label>
-              <input id="p-nombre" class="campo" x-model="$store.pedido.datos.nombre" autocomplete="name" maxlength="80" placeholder="¿A nombre de quién?" />
+              <input id="p-nombre" class="campo" x-model="$store.pedido.datos.nombre" autocomplete="name" autocapitalize="words" enterkeyhint="next" maxlength="80" placeholder="¿A nombre de quién?" />
             </div>
             <div>
               <label for="p-cuando" class="mb-1.5 block font-semibold">¿Para cuándo?</label>
-              <input id="p-cuando" class="campo" x-model="$store.pedido.datos.cuando" maxlength="80" placeholder="Ej.: sábado en la tarde" />
+              <input id="p-cuando" class="campo" x-model="$store.pedido.datos.cuando" autocapitalize="sentences" enterkeyhint="next" maxlength="80" placeholder="Ej.: sábado en la tarde" />
             </div>
             <div role="radiogroup" aria-labelledby="p-entrega">
               <p id="p-entrega" class="mb-1.5 font-semibold">¿Cómo lo recibes?</p>
@@ -729,7 +732,7 @@
             </div>
             <div class="despliega" :class="$store.pedido.datos.entrega !== 'domicilio' && 'plegado'">
               <label for="p-direccion" class="mb-1.5 block font-semibold">Dirección</label>
-              <input id="p-direccion" class="campo" x-model="$store.pedido.datos.direccion" autocomplete="street-address" maxlength="160" placeholder="Barrio, calle y número" />
+              <input id="p-direccion" class="campo" x-model="$store.pedido.datos.direccion" autocomplete="street-address" autocapitalize="sentences" enterkeyhint="next" maxlength="160" placeholder="Barrio, calle y número" />
               <p class="mt-1.5 text-sm text-cacao-3">El costo del domicilio lo acordamos por WhatsApp.</p>
             </div>
             <div role="radiogroup" aria-labelledby="p-pago">
@@ -750,14 +753,14 @@
             </div>
             <div>
               <label for="p-nota" class="mb-1.5 block font-semibold">Nota</label>
-              <textarea id="p-nota" class="campo nota resize-y" x-model="$store.pedido.datos.nota" maxlength="300" placeholder="Una dedicatoria, una alergia, la adición que quieres…"></textarea>
+              <textarea id="p-nota" class="campo nota resize-y" x-model="$store.pedido.datos.nota" autocapitalize="sentences" maxlength="300" placeholder="Una dedicatoria, una alergia, la adición que quieres…"></textarea>
             </div>
           </fieldset>
 
           <div class="mt-8">
             <p class="font-display text-2xl font-bold">Así le llega a Lusof</p>
-            <div class="chat-fondo mt-3 p-3 pl-10">
-              <div class="burbuja" x-text="$store.pedido.mensaje"></div>
+            <div class="chat-fondo mt-3 p-3 pl-6 sm:pl-10">
+              <div class="burbuja" x-html="formatoWhatsApp($store.pedido.mensaje)"></div>
             </div>
           </div>
         </div>
@@ -776,7 +779,7 @@
         <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" /></svg>
         <span>Abrimos WhatsApp con tu pedido. Falta que lo envíes desde allá.</span>
       </p>
-      <button type="button" class="mt-2 w-full rounded-full py-2 text-sm font-semibold text-cacao-3 hover:text-coral-tinta" @click="$store.pedido.vaciar()"
+      <button type="button" class="mt-1 min-h-11 w-full rounded-full py-2 text-sm font-semibold text-cacao-3 hover:text-coral-tinta" @click="$store.pedido.vaciar()"
         x-text="$store.pedido.confirmandoVaciar ? 'Toca otra vez para vaciar el pedido' : 'Vaciar pedido'"></button>
     </footer>
   </dialog>

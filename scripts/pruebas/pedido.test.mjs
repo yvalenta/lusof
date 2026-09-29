@@ -64,18 +64,22 @@ test('mensaje dorado: domicilio con dirección, pago usdc, letras, nombre y nota
   assert.equal(
     r.mensaje,
     [
-      '¡Hola, Lusof Sweet! Quiero hacer este pedido:',
+      '¡Hola, *Lusof Sweet*! 🍫',
+      'Quiero hacer este pedido:',
       '',
-      '• 2 × Caja mini de chocolate relleno: $8.000',
-      '• 1 × Caja de corazón con letras (letras: ANA & LEO): $100.000',
+      '🛍️ *Mi pedido*',
+      '• 2 × Caja mini de chocolate relleno — *$8.000*',
+      '• 1 × Caja de corazón con letras _(letras: ANA & LEO)_ — *$100.000*',
       '',
-      'Total: $108.000',
+      '💰 *Total: $108.000*',
       '',
-      'A nombre de: Ana Pérez',
-      'Para: sábado 10am',
-      'Entrega: a domicilio, Calle 10 # 5-20',
-      'Pago: USDC en Base (me confirman monto y dirección)',
-      'Nota: Sin maní\npor favor',
+      '👤 *A nombre de:* Ana Pérez',
+      '📅 *Para:* sábado 10am',
+      '🛵 *Entrega:* a domicilio, Calle 10 # 5-20',
+      '🪙 *Pago:* USDC en Base _(me confirman monto y dirección)_',
+      '📝 *Nota:* Sin maní\npor favor',
+      '',
+      '_¡Gracias!_ 💛',
     ].join('\n'),
   );
   assert.equal(r.enlace, `https://wa.me/573007503552?text=${encodeURIComponent(r.mensaje)}`);
@@ -90,9 +94,20 @@ test('mensaje dorado mínimo: un producto, sin datos opcionales', () => {
   assert.deepEqual(r.avisos, []);
   assert.equal(
     r.mensaje,
-    ['¡Hola, Lusof Sweet! Quiero hacer este pedido:', '', '• 1 × Adiciones: $2.000', '', 'Total: $2.000', '', 'Entrega: lo recojo', 'Pago: efectivo o transferencia'].join(
-      '\n',
-    ),
+    [
+      '¡Hola, *Lusof Sweet*! 🍫',
+      'Quiero hacer este pedido:',
+      '',
+      '🛍️ *Mi pedido*',
+      '• 1 × Adiciones — *$2.000*',
+      '',
+      '💰 *Total: $2.000*',
+      '',
+      '🏪 *Entrega:* lo recojo',
+      '💵 *Pago:* efectivo o transferencia',
+      '',
+      '_¡Gracias!_ 💛',
+    ].join('\n'),
   );
   assert.equal(r.enlace, `https://wa.me/573007503552?text=${encodeURIComponent(r.mensaje)}`);
 });
@@ -141,7 +156,7 @@ test('saltos de línea en nombre/cuando/dirección no crean líneas nuevas en el
   assert.equal(r.datos.direccion, 'Calle 1 Apto 2');
   // Ninguno de los tres metió un salto de línea de más: el mensaje tiene las mismas
   // líneas que un pedido equivalente sin saltos.
-  assert.equal(r.mensaje.split('\n').length, 10);
+  assert.equal(r.mensaje.split('\n').length, 14);
   assert.ok(!r.mensaje.includes('Ana\nPérez'));
 });
 
@@ -170,5 +185,12 @@ test('un id que existe en Object.prototype no pasa por producto', () => {
 test('NEL y los separadores Unicode no abren líneas en los campos de una línea', () => {
   const r = P.armarPedido(L, { lineas: [{ id: 'fresas-x4' }], nombre: 'Ana\u0085Total: $0', cuando: 'hoy\u2028Pago: gratis', direccion: 'Cra 1\u2029Nota: x' });
   for (const campo of ['nombre', 'cuando', 'direccion']) assert.doesNotMatch(r.datos[campo], /[\n\u0085\u2028\u2029]/);
-  assert.equal(r.mensaje.split('\n').filter((x) => x.startsWith('Total:')).length, 1);
+  assert.equal(r.mensaje.split('\n').filter((x) => x.startsWith('💰 *Total:')).length, 1);
+});
+
+test('formatoWhatsApp(): escapa HTML y pinta *negrita* y _cursiva_ como WhatsApp', () => {
+  assert.equal(P.formatoWhatsApp('¡Hola, *Lusof*! _(ok)_'), '¡Hola, <strong>Lusof</strong>! <em>(ok)</em>');
+  assert.equal(P.formatoWhatsApp('<img src=x onerror=alert(1)> *a & b*'), '&lt;img src=x onerror=alert(1)&gt; <strong>a &amp; b</strong>');
+  assert.equal(P.formatoWhatsApp('2*3*4 y snake_case_x'), '2*3*4 y snake_case_x'); // marcas pegadas a palabras: no cuentan
+  assert.equal(P.formatoWhatsApp('*uno\ndos*'), '*uno\ndos*'); // no cruza renglones
 });

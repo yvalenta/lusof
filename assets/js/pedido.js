@@ -94,25 +94,31 @@
     };
 
     const total = lineas.reduce((s, l) => s + l.subtotal, 0);
+    // Formato de WhatsApp: *negrita*, _cursiva_ y un emoji por renglón para leerlo de un vistazo.
+    // Lo que escribió la persona va sin marcas propias: es dato, no formato.
     const detalle = lineas.map((l) => {
-      const letras = porId.get(l.id).letras ? ` (letras: ${l.letras || 'por definir'})` : '';
-      return `• ${l.cantidad} × ${l.nombre}${letras}: ${pesos(l.subtotal)}`;
+      const letras = porId.get(l.id).letras ? ` _(letras: ${l.letras || 'por definir'})_` : '';
+      return `• ${l.cantidad} × ${l.nombre}${letras} — *${pesos(l.subtotal)}*`;
     });
     const b = catalogo.billetera;
-    const textoPago = pago === 'usdc' ? `${b.moneda} en ${b.red} (me confirman monto y dirección)` : 'efectivo o transferencia';
-    const textoEntrega = entrega === 'domicilio' ? `a domicilio${d.direccion ? ', ' + d.direccion : ''}` : 'lo recojo';
+    const textoPago = pago === 'usdc' ? `🪙 *Pago:* ${b.moneda} en ${b.red} _(me confirman monto y dirección)_` : '💵 *Pago:* efectivo o transferencia';
+    const textoEntrega = entrega === 'domicilio' ? `🛵 *Entrega:* a domicilio${d.direccion ? ', ' + d.direccion : ''}` : '🏪 *Entrega:* lo recojo';
     const mensaje = [
-      `¡Hola, ${catalogo.marca}! Quiero hacer este pedido:`,
+      `¡Hola, *${catalogo.marca}*! 🍫`,
+      'Quiero hacer este pedido:',
       '',
+      '🛍️ *Mi pedido*',
       ...detalle,
       '',
-      `Total: ${pesos(total)}`,
+      `💰 *Total: ${pesos(total)}*`,
       '',
-      d.nombre ? `A nombre de: ${d.nombre}` : null,
-      d.cuando ? `Para: ${d.cuando}` : null,
-      `Entrega: ${textoEntrega}`,
-      `Pago: ${textoPago}`,
-      d.nota ? `Nota: ${d.nota}` : null,
+      d.nombre ? `👤 *A nombre de:* ${d.nombre}` : null,
+      d.cuando ? `📅 *Para:* ${d.cuando}` : null,
+      textoEntrega,
+      textoPago,
+      d.nota ? `📝 *Nota:* ${d.nota}` : null,
+      '',
+      '_¡Gracias!_ 💛',
     ]
       .filter((x) => x !== null)
       .join('\n');
@@ -129,5 +135,16 @@
     };
   }
 
-  globalThis.LUSOF_PEDIDO = { MAX_LETRAS, MAX_CANTIDAD, MAX_TEXTO, ENTREGAS, PAGOS, pesos, normalizarLetras, enlaceWhatsApp, armarPedido };
+  /* El mensaje como lo pinta WhatsApp, para la vista previa: HTML escapado primero y después
+   * *negrita* y _cursiva_ con la regla de WhatsApp (la marca pega a una palabra, no cruza
+   * renglones). Escapar antes es lo que hace seguro usarlo con x-html aunque el texto
+   * traiga lo que escribió la persona. */
+  const escaparHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const marca = (m) => new RegExp(`(^|[\\s(¡¿])\\${m}(\\S(?:[^${m}\\n]*?\\S)?)\\${m}(?=$|[\\s.,:;!?)])`, 'gm');
+  const formatoWhatsApp = (texto) =>
+    escaparHTML(texto)
+      .replace(marca('*'), '$1<strong>$2</strong>')
+      .replace(marca('_'), '$1<em>$2</em>');
+
+  globalThis.LUSOF_PEDIDO = { MAX_LETRAS, MAX_CANTIDAD, MAX_TEXTO, ENTREGAS, PAGOS, pesos, normalizarLetras, enlaceWhatsApp, formatoWhatsApp, armarPedido };
 })();

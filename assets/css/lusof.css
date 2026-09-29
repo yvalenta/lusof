@@ -418,6 +418,8 @@ html.primera:not(.cargando) .heroe .linea {
 html:has(.cajon[open]) { overflow: hidden; }
 .cajon-agarre { width: 2.75rem; height: .3rem; border-radius: 999px; background: rgb(from var(--color-cacao) r g b / .2); margin: .6rem auto 0; }
 @media (min-width: 768px) { .cajon-agarre { display: none; } }
+/* la zona de arrastre no hace scroll ni zoom: el gesto es solo para bajar la hoja */
+@media (max-width: 767.98px) { .cajon-arrastre { touch-action: none; cursor: grab; } .cajon-agarre { margin-top: 0; padding-top: .6rem; background-clip: content-box; height: calc(.3rem + .6rem); } }
 
 /* Celular acostado con poca altura (o el teclado abierto): la cabecera fija (72px) y el
    pie fijo (181px, o 237px con el aviso de «enviado») no hacen scroll y casi no dejan zona
@@ -476,7 +478,7 @@ fieldset { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
 }
 .opcion:has(input:checked) { box-shadow: inset 0 0 0 2px var(--color-cacao); }
 .opcion:has(input:focus-visible) { outline: 3px solid var(--color-coral); outline-offset: 2px; }
-.opcion input { accent-color: var(--color-cacao); width: 1.05rem; height: 1.05rem; }
+.opcion input { accent-color: var(--color-cacao); width: 1.05rem; height: 1.05rem; flex: none; }
 
 /* La burbuja de WhatsApp: muestra el mensaje exacto antes de enviarlo */
 .chat-fondo {

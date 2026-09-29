@@ -364,6 +364,7 @@
       copiadoBilletera: false,
       temporizadorBilletera: 0,
       pesos,
+      formatoWhatsApp: P.formatoWhatsApp, // la burbuja pinta *negrita* y _cursiva_ como WhatsApp
       desde(categoria) {
         return Math.min(...productos.filter((p) => p.categoria === categoria).map((p) => p.precio));
       },
@@ -426,6 +427,30 @@
         if (e.target !== d) return;
         const r = d.getBoundingClientRect();
         if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) this.$store.pedido.cerrar();
+      },
+      // Deslizar para cerrar (solo táctil y solo en la hoja de abajo, < 768px): el cajón sigue
+      // al dedo y, pasado un umbral o con un tirón rápido, se cierra; si no, vuelve a su sitio.
+      arrastre: null,
+      arrastreInicio(e) {
+        if (e.pointerType === 'mouse' || innerWidth >= 768 || e.target.closest('button')) return;
+        this.arrastre = { y: e.clientY, t: e.timeStamp, dy: 0, cajon: e.currentTarget.closest('dialog') };
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch {} // el dedo puede salir de la zona sin perder el gesto
+        this.arrastre.cajon.style.transition = 'none';
+      },
+      arrastreMueve(e) {
+        const a = this.arrastre;
+        if (!a) return;
+        a.dy = Math.max(0, e.clientY - a.y);
+        a.cajon.style.transform = `translateY(${a.dy}px)`;
+      },
+      arrastreFin(e) {
+        const a = this.arrastre;
+        if (!a) return;
+        this.arrastre = null;
+        const rapido = a.dy / Math.max(1, e.timeStamp - a.t) > 0.5; // px/ms
+        a.cajon.style.transition = '';
+        a.cajon.style.transform = '';
+        if (e.type === 'pointerup' && (a.dy > 110 || (rapido && a.dy > 30))) this.$store.pedido.cerrar();
       },
       mas(clave, boton) {
         this.$store.pedido.cambiar(clave, 1);
