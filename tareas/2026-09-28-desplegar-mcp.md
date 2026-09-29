@@ -1,5 +1,5 @@
 ---
-estado: en-curso
+estado: hecha
 dueño: yonatan
 fecha: 2026-09-28
 tema: publicar el Worker del MCP en lusof-mcp.ynt.codes y anunciarlo en catalogo.json y llms.txt
@@ -50,3 +50,8 @@ salido (`mcp.lusof.ynt.codes` no resolvía; `agentes.mcp: null` a propósito). P
   Yonatan para fusionar `anunciar-mcp` a `main` (sale al aire) y confirmar en producción que
   `catalogo.json` trae `agentes.mcp` con la URL nueva. Sigue en la cuenta Yo.valenciat el
   `lusof-mcp` sin ruta del primer intento (borrarlo es decisión de Yonatan).
+- 2026-09-28: **GO de Yonatan.** `anunciar-mcp` fusionada a `main` por fast-forward (`8d9aa44`) y
+  empujada; CI `comprobar` y el deploy de Pages en verde. Medido en producción:
+  `https://lusof.ynt.codes/catalogo.json` trae `agentes.mcp.url = https://lusof-mcp.ynt.codes/mcp`
+  y `llms.txt` la anuncia. Criterio de cierre cumplido. **Hecha.** Queda fuera de esta tarea, a
+  decisión de Yonatan: el `lusof-mcp` sin ruta en la cuenta Yo.valenciat.
